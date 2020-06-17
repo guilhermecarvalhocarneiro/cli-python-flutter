@@ -1,0 +1,269 @@
+/// Controller do model AppName
+/// 
+///    O CÓDIGO DO ARQUIVO controller.g.dart NUNCA DEVE SER ALTERADO MANUALMENTE.
+///    Quando for alterado algo no arquivo controller.dart deve ser executado o comando:
+///      flutter pub run build_runner build
+///
+/// Após a execução do comando acima o arquivo controller.g.dart terá sido atualizado 
+/// com as novas features.
+///
+/// Os Métodos padrões gerados são:
+///   Métodos da API
+///     fecthAll() -> Recupera a lista de AppName.
+///     reload() -> Recarrega a lista de AppName.
+///     detail() -> Recupera os detalhes de um AppName.
+///     post() -> Salva um novo AppName.
+///     put() -> Atualiza os dados de um AppName.
+///     delete() -> Deleta um AppName.
+///
+///   Métodos do Data
+///     fetchLocal() -> Recupera a lista de AppName
+///     reloadLocal() -> Recarrega a lista de AppName
+///     detailLocal() -> Recupera os detalhes de um AppName
+///     saveLocal() -> Salva um novo AppName
+///     updateLocal() -> Atualiza um novo AppName
+///     deleteLocal() -> Deleta um novo AppName
+///     deleteAllLocal() -> Deleta um novo AppName
+
+///
+/// As regras de negócio devem ser implementadas nesse arquivo evitando ao máximo
+/// de serem implementadas nos arquivos das views/pages.
+///
+/// Todos os métodos de acesso à API devem ser implementados no Service.
+
+/// [Travar o arquivo]
+/// Caso deseje "travar" o arquivo para não ser parseado novamente
+/// pelo manage do Django adicione um # antes da palavra abaixo
+/// FileLocked
+
+import 'data.dart';
+import 'model.dart';
+import 'service.dart';
+import '../../../utils/config.dart';
+import '../../../utils/process.controller.dart';
+
+import 'package:mobx/mobx.dart';
+import 'package:get_it/get_it.dart';
+
+part 'controller.g.dart';
+
+class AppNameController = _AppNameControllerBase with _$AppNameController;
+
+/// Declarando a classe abstrata do AppName com o Mixin de Store
+abstract class _AppNameControllerBase with Store {
+
+  // Instanciando o controller de processamento
+  ProcessController _processController = GetIt.I.get<ProcessController>();
+
+  // Instanciando o AppNameData responsável pelo acesso ao SQLite.
+  AppNameData _appNameData = AppNameData();
+
+  // Instanciando o AppNameService responsável pelo acesso à API.
+  AppNameService _appNameService = AppNameService();
+
+  // Declarando os elementos observáveis padrões do AppNameController.
+  @observable
+  ObservableList<AppNameModel> appNameList;
+  
+  @observable
+  AppNameModel appNameModel;
+
+  /// Declarando os elementos observáveis do Db do AppNameController.
+  @observable
+  ObservableList<AppNameModel> appNameLocalList;
+
+  @observable
+  AppNameModel appNameLocalModel;
+
+  /// Declarando os actions padrões do AppNameController.
+  
+  /// Action responsável pelo retorno da lista de elementos da API.
+  @action
+  fetchAll() async{
+    try{
+     _processController.processing = true;
+      // Recuperando a lista de AppName da API.
+      appNameList = ObservableList<AppNameModel>.of(await _appNameService.fetchAll());
+    } catch (error, exception) {
+      _error(error.toString(), exception.toString());
+    }finally{
+      _processController.processing = false;
+    }
+  }
+
+  /// Action responsável por recarregar os dados da API.
+  @action
+  reload() async{
+    try{
+      _processController.processing = true;
+      // Limpando os dados contidos na lista de AppName
+      appNameList.clear();
+      // Invocando o método que carrega os dados da API.
+      this.fetchAll();
+    } catch (error, exception) {
+      _error(error.toString(), exception.toString());
+    }finally{
+      _processController.processing = false;
+    }
+  }
+
+  /// Action responsável por detalhar um AppName
+  @action
+  detail() async{
+    try{
+      _processController.processing = true;
+      // Recuperando o detalhe de um determinado AppName da API. 
+      appNameModel = await _appNameService.detail(appNameModel);
+    } catch (error, exception) {
+      _error(error.toString(), exception.toString());
+    }finally{
+      _processController.processing = false;
+    }
+  }
+
+  /// Action responsável por salvar os dados de uma instância do AppName na API.
+  @action
+  post() async{
+    try{
+      _processController.processing = true;
+      // Recuperando o detalhe de um determinado AppName da API. 
+      appNameModel = await _appNameService.post(appNameModel);
+    } catch (error, exception) {
+      _error(error.toString(), exception.toString());
+    }finally{
+      _processController.processing = false;
+    }
+  }
+
+  /// Action responsável por atualizar os dados de uma instância do AppName na API.
+  @action
+  put() async{
+    try{
+      _processController.processing = true;
+      // Recuperando o detalhe de um determinado AppName da API. 
+      appNameModel = await _appNameService.put(appNameModel);
+    } catch (error, exception) {
+      _error(error.toString(), exception.toString());
+    }finally{
+      _processController.processing = false;
+    }
+  }
+
+  /// Action responsável por excluir os dados de uma instância do AppName na API.
+  @action
+  delete() async{
+    try{
+      _processController.processing = true;
+      // Recuperando o detalhe de um determinado AppName da API. 
+      bool _result = await _appNameService.delete(appNameModel);
+      if(_result){
+        _success("ok");
+      }
+    } catch (error, exception) {
+      _error(error.toString(), exception.toString());
+    }finally{
+      _processController.processing = false;
+    }
+  }
+
+  /// Action para recuperar todos os registros do Db
+  @action
+  fetchAllLocal() async{
+    try{
+      _processController.processing = true;
+      appNameLocalList = ObservableList<AppNameModel>.of(await _appNameData.fetchAll());
+    } catch (error, exception) {
+      _error(error.toString(), exception.toString());
+    }
+  }
+  
+  /// Action para atualizar a lista de AppName do Db
+  @action
+  reloadLocal() async{
+    try{
+      appNameLocalList.clear();
+      this.fetchAllLocal();
+    } catch (error, exception) {
+      _error(error.toString(), exception.toString());
+    }
+  }
+
+  /// Action para detalhar um AppName do Db
+  @action
+  detailLocal(int id) async{
+    try{
+      appNameLocalModel = await _appNameData.get(id);
+    } catch (error, exception) {
+      _error(error.toString(), exception.toString());
+    }finally{
+      _processController.processing = false;
+    }
+  }
+
+  /// Action para detalhar um AppName do Db
+  @action
+  saveLocal(AppNameModel model) async{
+    try{
+      bool _result = await _appNameData.save(model);
+      if(_result){
+        appNameLocalModel = model;
+      }
+    } catch (error, exception) {
+      _error(error.toString(), exception.toString());
+    }
+  }
+
+  /// Action para atualizar um AppName do Db
+  @action
+  updateLocal(AppNameModel model) async{
+    try{
+      bool _result = await _appNameData.update(model);
+      if(_result){
+        appNameLocalModel = model;
+      }
+    } catch (error, exception) {
+      _error(error.toString(), exception.toString());
+    }
+  }
+
+  /// Action para deletar um AppName do Db
+  @action
+  deleteLocal(int id) async{
+    try{
+      return await _appNameData.delete(id);
+    } catch (error, exception) {
+      _error(error.toString(), exception.toString());
+    }
+  }
+
+  /// Action para deletar todos os AppNames do Db
+  @action
+  deleteAllLocal() async{
+    try{
+      return await _appNameData.deleteAll();
+    } catch (error, exception) {
+      _error(error.toString(), exception.toString());
+    }
+  }
+
+  /// Métodos para tratar o retorno do processamento
+  void _success(String message) async {
+    try {
+      _processController.withSuccess(message: message);
+    } catch (e) {
+      DebugPrint.imprimir("Ocorreu um erro no método error: $e");
+    }
+  }
+
+  void _error(String error, String exception) async {
+    try {
+      _processController.withError(
+        error: error,
+        exception: exception,
+      );
+    } catch (e) {
+      DebugPrint.imprimir("Ocorreu um erro no método error: $e");
+    }
+  }
+
+}

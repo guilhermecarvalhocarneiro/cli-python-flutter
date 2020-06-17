@@ -1,0 +1,34 @@
+/// Model da app AppName
+
+/// [Travar o arquivo]
+/// Caso deseje "travar" o arquivo para não ser parseado novamente
+/// pelo manage do Django adicione um # antes da palavra abaixo
+/// FileLocked
+
+import 'dart:convert';
+
+class AppNameModel{  
+  int id;
+  String nextUrl;
+  String previousUrl;
+  
+  AppNameModel({
+    this.id,
+    this.nextUrl, 
+    this.previousUrl,
+  });
+
+  factory AppNameModel.fromJson(String str) => AppNameModel.fromMap(json.decode(str));
+
+  String toJson() => json.encode(toMap());
+
+  factory AppNameModel.fromMap(Map<String, dynamic> json) => AppNameModel(
+      nextUrl: json["nextUrl"] == null ? null : json["nextUrl"],
+      previousUrl: json["previousUrl"] == null ? null : json["previousUrl"],
+  );
+
+  Map<String, dynamic> toMap() => {
+      "nextUrl": nextUrl == null ? null : nextUrl,
+      "previousUrl": previousUrl == null ? null : previousUrl,
+  };
+}
