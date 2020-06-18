@@ -169,5 +169,5 @@ class Parser:
 
 
 if __name__ == "__main__":
-    app_name = "Exemplo Dois" #input("Informe o nome da app no formato Nome/Nome Composto: ")
+    app_name = input("Informe o nome da app no formato NomeSimples ou  Nome Composto: ")
     Parser(app_name).parse()
