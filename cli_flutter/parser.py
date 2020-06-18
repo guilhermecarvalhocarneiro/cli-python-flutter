@@ -5,8 +5,11 @@ import time
 import platform
 import traceback
 import subprocess
+import shutil
 
 from pathlib import Path
+
+from snippets import Snippet
 
 class Parser:
     
@@ -18,24 +21,11 @@ class Parser:
         self.app_name_dir = ""
         self.sanitase()
 
-        self.path_cli = Path("C:/Users/guilh/Development/Python/cli")
         self.path_root = os.getcwd()
 
         self.app_dir = Path(f"{self.path_root}/{self.app_name_dir.lower()}")
         self.app_dir_views = Path(f"{self.app_dir}/views")
-        
-        self.data_snippet = Path(f"{self.path_cli}/snippets/data.txt")
-        self.controller_snippet = Path(f"{self.path_cli}/snippets/controller.txt")
-        self.service_snippet = Path(f"{self.path_cli}/snippets/service.txt")
-        self.model_snippet = Path(f"{self.path_cli}/snippets/model.txt")
-        self.views_index_snippet = Path(f"{self.path_cli}/snippets/views_index.txt")
-        self.views_list_snippet = Path(f"{self.path_cli}/snippets/views_list.txt")
-        self.views_detail_snippet = Path(f"{self.path_cli}/snippets/views_detail.txt")
-        self.views_create_snippet = Path(f"{self.path_cli}/snippets/views_create.txt")
-        self.views_update_snippet = Path(f"{self.path_cli}/snippets/views_update.txt")
-        self.views_delete_snippet = Path(f"{self.path_cli}/snippets/views_delete.txt")
-        self.widget_snippet = Path(f"{self.path_cli}/snippets/widget.txt")
-        
+
         self.data_file = Path(f"{self.app_dir}/data.dart")
         self.model_file = Path(f"{self.app_dir}/model.dart")
         self.controller_file = Path(f"{self.app_dir}/controller.dart")
@@ -85,89 +75,74 @@ class Parser:
             os.makedirs(self.app_dir)
             # Criando o subdiretório das views
             os.makedirs(self.app_dir_views)
-            # Criando o arquivo data
 
-            with open(self.data_snippet, 'r') as data_snippet:
-                self.content = data_snippet.read()
-            with open(self.data_file, 'w') as data_file:
-                self.parse_content()
-                data_file.write(self.content)
-                self.content = None
-
-            with open(self.controller_snippet, 'r') as data_snippet:
-                self.content = data_snippet.read()
-            with open(self.controller_file, 'w') as data_file:
-                self.parse_content()
-                data_file.write(self.content)
-                self.content = None
-
-            with open(self.model_snippet, 'r') as data_snippet:
-                self.content = data_snippet.read()
-            with open(self.model_file, 'w') as data_file:
-                self.parse_content()
-                data_file.write(self.content)
-                self.content = None
-
-            with open(self.service_snippet, 'r') as data_snippet:
-                self.content = data_snippet.read()
-            with open(self.service_file, 'w') as data_file:
-                self.parse_content()
-                data_file.write(self.content)
-                self.content = None
-
-            with open(self.views_index_snippet, 'r') as data_snippet:
-                self.content = data_snippet.read()
-            with open(self.views_index_file, 'w') as data_file:
-                self.parse_content()
-                data_file.write(self.content)
-                self.content = None
-
-            with open(self.views_list_snippet, 'r') as data_snippet:
-                self.content = data_snippet.read()
-            with open(self.views_list_file, 'w') as data_file:
-                self.parse_content()
-                data_file.write(self.content)
-                self.content = None
-
-            with open(self.views_create_snippet, 'r') as data_snippet:
-                self.content = data_snippet.read()
-            with open(self.views_create_file, 'w') as data_file:
+            self.content = Snippet.get_data_snippet()
+            with open(self.data_file, 'w', encoding='utf-8') as data_file:
                 self.parse_content()
                 data_file.write(self.content)
                 self.content = None
             
-            with open(self.views_update_snippet, 'r') as data_snippet:
-                self.content = data_snippet.read()
-            with open(self.views_update_file, 'w') as data_file:
+            self.content = Snippet.get_controller_snippet()
+            with open(self.controller_file, 'w', encoding='utf-8') as data_file:
                 self.parse_content()
                 data_file.write(self.content)
                 self.content = None
 
-            with open(self.views_delete_snippet, 'r') as data_snippet:
-                self.content = data_snippet.read()
-            with open(self.views_delete_file, 'w') as data_file:
+            self.content = Snippet.get_model_snippet()
+            with open(self.model_file, 'w', encoding='utf-8') as data_file:
+                self.parse_content()
+                data_file.write(self.content)
+                self.content = None
+
+            self.content = Snippet.get_service_snippet()
+            with open(self.service_file, 'w', encoding='utf-8') as data_file:
+                self.parse_content()
+                data_file.write(self.content)
+                self.content = None
+
+            self.content = Snippet.get_index_views_snippet()
+            with open(self.views_index_file, 'w', encoding='utf-8') as data_file:
+                self.parse_content()
+                data_file.write(self.content)
+                self.content = None
+
+            self.content = Snippet.get_list_views_snippet()
+            with open(self.views_list_file, 'w', encoding='utf-8') as data_file:
+                self.parse_content()
+                data_file.write(self.content)
+                self.content = None
+
+            self.content = Snippet.get_create_views_snippet()
+            with open(self.views_create_file, 'w', encoding='utf-8') as data_file:
                 self.parse_content()
                 data_file.write(self.content)
                 self.content = None
             
-            with open(self.views_detail_snippet, 'r') as data_snippet:
-                self.content = data_snippet.read()
-            with open(self.views_detail_file, 'w') as data_file:
+            self.content = Snippet.get_update_views_snippet()
+            with open(self.views_update_file, 'w', encoding='utf-8') as data_file:
                 self.parse_content()
                 data_file.write(self.content)
                 self.content = None
 
-            with open(self.widget_snippet, 'r') as data_snippet:
-                self.content = data_snippet.read()
-            with open(self.widget_file, 'w') as data_file:
+            self.content = Snippet.get_delete_views_snippet()
+            with open(self.views_delete_file, 'w', encoding='utf-8') as data_file:
+                self.parse_content()
+                data_file.write(self.content)
+                self.content = None
+            
+            self.content = Snippet.get_detail_views_snippet()
+            with open(self.views_detail_file, 'w', encoding='utf-8') as data_file:
+                self.parse_content()
+                data_file.write(self.content)
+                self.content = None
+
+            self.content = Snippet.get_widget_snippet()
+            with open(self.widget_file, 'w', encoding='utf-8') as data_file:
                 self.parse_content()
                 data_file.write(self.content)
                 self.content = None
 
         except Exception as error:
-            print(error)
-
-
-if __name__ == "__main__":
-    app_name = input("Informe o nome da app no formato NomeSimples ou  Nome Composto: ")
-    Parser(app_name).parse()
+            # Excluindo o diretório criado de forma recursiva
+            shutil.rmtree(Path(f"{self.app_dir}"))
+            raise
