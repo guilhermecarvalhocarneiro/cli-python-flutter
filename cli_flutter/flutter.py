@@ -11,8 +11,16 @@ def flutter():
 
 @flutter.command()
 @click.argument('app_name', type=click.STRING)
-def parser(app_name):
+@click.argument('state_manager', type=click.STRING)
+@click.argument('replace', type=click.BOOL, default=False)
+def parser(app_name, state_manager, replace):
+    """Método para gerar a app flutter
+
+    Args:
+        app_name (String): Nome da App no formato NomeApp
+        state_manager (String): Tipo do gerenciador de estado a ser utilizado, provider ou mobx
+    """
     try:
-        Parser(app_name).parse()
+        Parser(app_name, state_manager, replace).parse()
     except Exception as erro:
         print(f"Ocorreu um erro -> {erro}")

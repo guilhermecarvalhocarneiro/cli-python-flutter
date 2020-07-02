@@ -21,13 +21,12 @@ import 'package:flutter/foundation.dart';
 import 'model.dart';
 import '../../utils/config.dart';
 import '../../utils/custom_dio.dart';
-import '../../utils/process.controller.dart';
 
 class AppNameService {
   static String _uri = "";
   AppNameModel _appName = AppNameModel();
   List<AppNameModel> _appNameList = List<AppNameModel>();
-  ProcessController _processController = GetIt.I<ProcessController>();
+
   AppNameService({AppNameModel appName, List<AppNameModel> appNameList}) {
     if (appName != null) _appName = appName;
   }
@@ -149,21 +148,10 @@ class AppNameService {
   }
  
  void _success(String message) async {
-   try {
-     _processController.withSuccess(message: message);
-   } catch (error) {
-     debugPrint("Ocorreu um erro no service de AppName: $error");
-   }
+   debugPrint(message);
  }
  
  void _error(String error, String exception) async {
-   try {
-     _processController.withError(
-       error: error,
-       exception: exception,
-     );
-   } catch (error) {
-     debugPrint("Ocorreu um erro no service de AppName: $error");
-   }
+   debugPrint("Ocorreu um erro no service de AppName: $error");
  }
 }

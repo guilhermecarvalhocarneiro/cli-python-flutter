@@ -1,18 +1,17 @@
 """
-
 Flutter setup.
 
-Instalar o Flutter CLI na máquina
-
+Instalar o Flutter CLI na terminal.
 """
 
-from setuptools import setup
+from setuptools import setup, find_packages
 
 setup(
     name='flutter_cli',
-    version='0.0.1', 
+    version='0.0.2',
     packages=['cli_flutter', 'snippets'],
-    entry_points = {
+    include_package_data=True,
+    entry_points={
         'console_scripts': [
             'flutter_cli = cli_flutter'
         ]
