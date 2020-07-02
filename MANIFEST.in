@@ -1,1 +1,1 @@
-recursive-include snippets/*.txt
+include snippets/*.txt

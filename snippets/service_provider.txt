@@ -135,7 +135,7 @@ class AppNameService {
       CustomDio _dio = CustomDio(_uri);
       _dio.makeHeadersAuthentication();
       var data = appName.toMap();
-      var dataResponse = await _dio.deleteHttp(data, appName.id.toString());
+      var dataResponse = await _dio.deleteHttp(data);
       if (dataResponse != null) {
         _success("ok");
         return true;

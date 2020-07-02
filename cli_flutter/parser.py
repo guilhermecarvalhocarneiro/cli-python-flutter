@@ -41,10 +41,11 @@ class Parser:
         self.views_create_file = Path(f"{self.app_dir_views}/create.dart")
         self.views_update_file = Path(f"{self.app_dir_views}/update.dart")
         self.views_delete_file = Path(f"{self.app_dir_views}/delete.dart")
+        self.provider_file = Path(f"{self.app_dir}/provider.dart")
         self.widget_file = Path(f"{self.app_dir_views}/widget.dart")
         self.content = None
 
-        if self.replace:
+        if (self.replace and os.path.isdir(self.app_dir)):
             shutil.rmtree(Path(f"{self.app_dir}"))
 
     def to_camel_case(self, class_name=True):
@@ -80,30 +81,37 @@ class Parser:
                 sys.exit()
             os.makedirs(self.app_dir)
             os.makedirs(self.app_dir_views)
+            
             self.content = Snippet.get_data_snippet()
             with open(self.data_file, 'w', encoding='utf-8') as data_file:
                     self.parse_content()
                     data_file.write(self.content)
                     self.content = None
+            
             self.content = Snippet.get_model_snippet()
             with open(self.model_file, 'w', encoding='utf-8') as data_file:
                 self.parse_content()
                 data_file.write(self.content)
                 self.content = None
+            
+            self.content = Snippet.get_widget_snippet()
+            with open(self.widget_file, 'w', encoding='utf-8') as data_file:
+                self.parse_content()
+                data_file.write(self.content)
+                self.content = None
+            
             if self.state_manager == 'mobx':
                 self.parse_mobx()
             else:
                 self.parse_provider()
         except Exception as error:
-            print(f"Erro no parse: {error}")
             shutil.rmtree(Path(f"{self.app_dir}"))
             raise
 
     def parse_provider(self):
-        return
         try:
             self.content = Snippet.get_provider_snippet()
-            with open(self.controller_file, 'w', encoding='utf-8') as data_file:
+            with open(self.provider_file, 'w', encoding='utf-8') as data_file:
                 self.parse_content()
                 data_file.write(self.content)
                 self.content = None
@@ -114,53 +122,44 @@ class Parser:
                 data_file.write(self.content)
                 self.content = None
 
-            return 
+            self.content = Snippet.get_create_view_provider_snippet()
+            with open(self.views_create_file, 'w', encoding='utf-8') as data_file:
+                self.parse_content()
+                data_file.write(self.content)
+                self.content = None
 
-            self.content = Snippet.get_index_views_snippet()
+            self.content = Snippet.get_index_view_provider_snippet()
             with open(self.views_index_file, 'w', encoding='utf-8') as data_file:
                 self.parse_content()
                 data_file.write(self.content)
                 self.content = None
 
-            self.content = Snippet.get_list_views_snippet()
+            self.content = Snippet.get_list_view_provider_snippet()
             with open(self.views_list_file, 'w', encoding='utf-8') as data_file:
                 self.parse_content()
                 data_file.write(self.content)
                 self.content = None
 
-            self.content = Snippet.get_create_views_snippet()
-            with open(self.views_create_file, 'w', encoding='utf-8') as data_file:
-                self.parse_content()
-                data_file.write(self.content)
-                self.content = None
-            
-            self.content = Snippet.get_update_views_snippet()
-            with open(self.views_update_file, 'w', encoding='utf-8') as data_file:
-                self.parse_content()
-                data_file.write(self.content)
-                self.content = None
-
-            self.content = Snippet.get_delete_views_snippet()
-            with open(self.views_delete_file, 'w', encoding='utf-8') as data_file:
-                self.parse_content()
-                data_file.write(self.content)
-                self.content = None
-            
-            self.content = Snippet.get_detail_views_snippet()
+            self.content = Snippet.get_detail_view_provider_snippet()
             with open(self.views_detail_file, 'w', encoding='utf-8') as data_file:
                 self.parse_content()
                 data_file.write(self.content)
                 self.content = None
 
-            self.content = Snippet.get_widget_snippet()
-            with open(self.widget_file, 'w', encoding='utf-8') as data_file:
+            self.content = Snippet.get_update_view_provider_snippet()
+            with open(self.views_update_file, 'w', encoding='utf-8') as data_file:
+                self.parse_content()
+                data_file.write(self.content)
+                self.content = None
+
+            self.content = Snippet.get_delete_view_provider_snippet()
+            with open(self.views_delete_file, 'w', encoding='utf-8') as data_file:
                 self.parse_content()
                 data_file.write(self.content)
                 self.content = None
 
         except Exception as error:
-            print(f"Erro no parse_provider: {error}")
-            # shutil.rmtree(Path(f"{self.app_dir}"))
+            shutil.rmtree(Path(f"{self.app_dir}"))
             raise
 
     def parse_mobx(self):
@@ -170,6 +169,7 @@ class Parser:
                 self.parse_content()
                 data_file.write(self.content)
                 self.content = None
+            
             self.content = Snippet.get_controller_snippet()
             with open(self.controller_file, 'w', encoding='utf-8') as data_file:
                 self.parse_content()
@@ -224,13 +224,6 @@ class Parser:
                 data_file.write(self.content)
                 self.content = None
 
-            self.content = Snippet.get_widget_snippet()
-            with open(self.widget_file, 'w', encoding='utf-8') as data_file:
-                self.parse_content()
-                data_file.write(self.content)
-                self.content = None
-
         except Exception as error:
-            print(f"Erro no parse_mobx: {error}")
-            # shutil.rmtree(Path(f"{self.app_dir}"))
+            shutil.rmtree(Path(f"{self.app_dir}"))
             raise

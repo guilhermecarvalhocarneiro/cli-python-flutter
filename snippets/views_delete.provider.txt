@@ -1,0 +1,78 @@
+/// Views Delete da AppName
+
+/// [Travar o arquivo]
+/// Caso deseje "travar" o arquivo para não ser parseado novamente
+/// pelo manage do Django adicione um # antes da palavra abaixo
+/// FileLocked
+
+import 'package:get_it/get_it.dart';
+import 'package:flutter/material.dart';
+
+import 'widget.dart';
+import '../model.dart';
+import '../../../user_interface/font.dart';
+import '../../../user_interface/widget.dart';
+import '../../../utils/process.provider.dart';
+
+class DeleteAppNamePage extends StatefulWidget {
+  @override
+  _DeleteAppNamePageState createState() => _DeleteAppNamePageState();
+}
+
+class _DeleteAppNamePageState extends State<DeleteAppNamePage> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  AnimationController _animationController;
+  AppNameModel _model = AppNameModel();
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    _model = null;
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      key: _scaffoldKey,
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent
+      ),
+      body: _buildBody(),
+    );
+  }
+
+  Widget _buildBody() {
+    return Stack(
+      children: <Widget> [
+        HeadWidget(),
+        _buildPage()
+      ]
+    );
+  }
+
+  Widget _buildPage() {
+    final _appNameProvider = Provider.of<AppNameProvider>(context, listen: false);
+    return Container();
+  }
+
+  _showMessage(String message, {bool error = false}) {
+    setState(() {
+      _scaffoldKey.currentState.showSnackBar(
+        error == false
+            ? customSuccessSnackbar(message)
+            : customErrorSnackbar(message),
+      );
+    });
+  }
+
+  _hideKeyboard(BuildContext context) {
+    FocusScope.of(context).requestFocus(FocusNode());
+  }
+}

@@ -68,3 +68,27 @@ class Snippet():
     @staticmethod
     def get_service_provider_snippet():
         return open(os.path.join(Snippet.get_path(), "service_provider.txt"), encoding='utf-8').read()
+
+    @staticmethod
+    def get_create_view_provider_snippet():
+        return open(os.path.join(Snippet.get_path(), "views_create.provider.txt"), encoding='utf-8').read()
+
+    @staticmethod
+    def get_index_view_provider_snippet():
+        return open(os.path.join(Snippet.get_path(), "views_index.provider.txt"), encoding='utf-8').read()
+
+    @staticmethod
+    def get_list_view_provider_snippet():
+        return open(os.path.join(Snippet.get_path(), "views_list.provider.txt"), encoding='utf-8').read()
+
+    @staticmethod
+    def get_detail_view_provider_snippet():
+        return open(os.path.join(Snippet.get_path(), "views_detail.provider.txt"), encoding='utf-8').read()
+
+    @staticmethod
+    def get_update_view_provider_snippet():
+        return open(os.path.join(Snippet.get_path(), "views_update.provider.txt"), encoding='utf-8').read()
+
+    @staticmethod
+    def get_delete_view_provider_snippet():
+        return open(os.path.join(Snippet.get_path(), "views_delete.provider.txt"), encoding='utf-8').read()
