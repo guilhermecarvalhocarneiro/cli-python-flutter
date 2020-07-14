@@ -6,13 +6,15 @@
 /// FileLocked
 
 import 'package:flutter/material.dart';
+import 'package:help/user_interface/font.dart';
+import 'package:help/user_interface/widget.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../user_interface/font.dart';
-import '../../../../user_interface/widget.dart';
-import '../../../../utils/localization.dart';
-import '../../../../utils/process.provider.dart';
-import '../../../../utils/util.dart';
+import '../../../user_interface/font.dart';
+import '../../../user_interface/widget.dart';
+import '../../../utils/localization.dart';
+import '../../../utils/process.provider.dart';
+import '../../../utils/util.dart';
 import '../model.dart';
 import '../provider.dart';
 
@@ -29,8 +31,6 @@ class _AppNameAddPageState extends State<AppNameUpdatePage>
   AnimationController _animationController;
   AppNameModel _appName = AppNameModel();
 
-  $Attributes$
-
   @override
   void initState() {
     _animationController = AnimationController(vsync: this);
@@ -46,8 +46,6 @@ class _AppNameAddPageState extends State<AppNameUpdatePage>
   Widget build(BuildContext context) {
     final _appNameProvider = Provider.of<AppNameProvider>(context, listen: false);
     _appName = _appNameProvider.appNameModel;
-
-    $EditedAttributes$
 
     return Scaffold(
       key: _scaffoldKey,
