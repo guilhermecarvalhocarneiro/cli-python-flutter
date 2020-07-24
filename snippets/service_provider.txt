@@ -21,6 +21,7 @@ import 'package:flutter/foundation.dart';
 import 'model.dart';
 import '../../utils/config.dart';
 import '../../utils/custom_dio.dart';
+import '../../utils/util.dart';
 
 class AppNameService {
   static String _uri = "";
@@ -147,11 +148,21 @@ class AppNameService {
     }
   }
  
- void _success(String message) async {
-   debugPrint(message);
- }
- 
- void _error(String error, String exception) async {
-   debugPrint("Ocorreu um erro no service de AppName: $error");
- }
+  void _success(String message, {int statusCode}) async {
+    try {
+      Process.finishSuccess(message, status: statusCode);
+    } catch (e) {
+      debugPrint("Ocorreu um erro no método error: $e");
+    }
+  }
+
+  void _error(String error, String exception, {int statusCode}) async {
+    try {
+      if (Process.isDioError == false) {
+        Process.finishError(error, exception, status: statusCode);
+      }
+    } catch (e) {
+      debugPrint("Ocorreu um erro no método error: $e");
+    }
+  }
 }
