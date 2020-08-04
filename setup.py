@@ -8,7 +8,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='flutter_cli',
-    version='0.0.3',
+    version='0.1.0',
     packages=['cli_flutter', 'snippets'],
     include_package_data=True,
     entry_points={
