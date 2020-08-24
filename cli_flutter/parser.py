@@ -12,7 +12,6 @@ from pathlib import Path
 from snippets import Snippet
 
 class Parser:
-    
     def __init__(self, app_name, state_manager, replace):
         if app_name == None:
             sys.exit()
