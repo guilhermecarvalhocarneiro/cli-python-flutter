@@ -28,7 +28,7 @@ class Parser:
         self.path_root = os.getcwd()
 
         self.app_dir = Path(f"{self.path_root}/{self.app_name_dir.lower()}")
-        self.app_dir_views = Path(f"{self.app_dir}/views")
+        self.app_dir_views = Path(f"{self.app_dir}/pages")
 
         self.data_file = Path(f"{self.app_dir}/data.dart")
         self.model_file = Path(f"{self.app_dir}/model.dart")

@@ -7,10 +7,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../user_interface/font.dart';
-import '../../../../user_interface/widget.dart';
-import '../../../../utils/config.dart';
-import '../../../../utils/util.dart';
+import '../../../user_interface/font.dart';
+import '../../../user_interface/widget.dart';
+import '../../../utils/config.dart';
+import '../../../utils/util.dart';
 import '../cubit.dart';
 import '../model.dart';
 
@@ -26,7 +26,6 @@ class _AppNameAddPageState extends State<AppNameAddPage>
   AnimationController _animationController;
   AppNameModel _appName = AppNameModel();
   final _formAppName = GlobalKey<FormState>();
-  $Attributes$
 
   @override
   void initState() {
@@ -115,7 +114,6 @@ class _AppNameAddPageState extends State<AppNameAddPage>
         mainAxisSize: MainAxisSize.max,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
-          $Form$
         ],
       ),
     );
@@ -140,13 +138,11 @@ class _AppNameAddPageState extends State<AppNameAddPage>
   }
 
   void _clearForm(){
-    $ClearData$
   }
 
   void _post() async {
     final _appNameCubit = context.bloc<AppNameCubit>();
     try{
-      $GetValuesControllers$
       _appNameCubit.appNameModel = _appName;
       _appNameCubit.post(_appName);
     }catch (e){

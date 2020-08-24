@@ -7,11 +7,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../user_interface/font.dart';
-import '../../../../user_interface/widget.dart';
-import '../../../../utils/localization.dart';
-import '../../../../utils/config.dart';
-import '../../../../utils/util.dart';
+import '../../../user_interface/font.dart';
+import '../../../user_interface/widget.dart';
+import '../../../utils/localization.dart';
+import '../../../utils/config.dart';
+import '../../../utils/util.dart';
 import '../model.dart';
 import '../cubit.dart';
 import 'update.dart';

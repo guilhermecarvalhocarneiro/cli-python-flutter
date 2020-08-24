@@ -79,11 +79,11 @@ abstract class _AppNameControllerBase with Store {
   
   /// Action responsável pelo retorno da lista de elementos da API.
   @action
-  fetchAll() async{
+  fetch() async{
     try{
      _processController.processing = true;
       // Recuperando a lista de AppName da API.
-      appNameList = ObservableList<AppNameModel>.of(await _appNameService.fetchAll());
+      appNameList = ObservableList<AppNameModel>.of(await _appNameService.fetch());
     } catch (error, exception) {
       _error(error.toString(), exception.toString());
     }finally{
@@ -99,7 +99,7 @@ abstract class _AppNameControllerBase with Store {
       // Limpando os dados contidos na lista de AppName
       appNameList.clear();
       // Invocando o método que carrega os dados da API.
-      this.fetchAll();
+      this.fetch();
     } catch (error, exception) {
       _error(error.toString(), exception.toString());
     }finally{
@@ -168,10 +168,10 @@ abstract class _AppNameControllerBase with Store {
 
   /// Action para recuperar todos os registros do Db
   @action
-  fetchAllLocal() async{
+  fetchLocal() async{
     try{
       _processController.processing = true;
-      appNameLocalList = ObservableList<AppNameModel>.of(await _appNameData.fetchAll());
+      appNameLocalList = ObservableList<AppNameModel>.of(await _appNameData.fetch());
     } catch (error, exception) {
       _error(error.toString(), exception.toString());
     }
@@ -182,7 +182,7 @@ abstract class _AppNameControllerBase with Store {
   reloadLocal() async{
     try{
       appNameLocalList.clear();
-      this.fetchAllLocal();
+      this.fetchLocal();
     } catch (error, exception) {
       _error(error.toString(), exception.toString());
     }

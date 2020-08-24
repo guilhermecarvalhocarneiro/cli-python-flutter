@@ -23,16 +23,12 @@ class AppNameData {
   smbt.Database _db;
   final String _storeName = "appNameStoreDB";
 
-  // TODO: Alterar o nome do DbName na linha 41 para o nome do banco do projeto
   Future<smbt.Database> initDb() async {
     try {
-      // get the application documents directory
       var dir = await getApplicationDocumentsDirectory();
-      // make sure it exists
       await dir.create(recursive: true);
-      // build the database path
+      // TODO 0: Alterar o DbName.db para o banco do nome do projeto.
       var dbPath = join(dir.path, 'DbName.db');
-      // open the database
       return await smbt_io.databaseFactoryIo.openDatabase(dbPath);
     } catch (error, exception) {
       debugPrint(
@@ -41,7 +37,7 @@ class AppNameData {
     return null;
   }
 
-  Future<List<AppNameModel>> fetchAll() async {
+  Future<List<AppNameModel>> fetch() async {
     try {
       _db = await initDb();
       var _store = smbt.intMapStoreFactory.store(_storeName);
@@ -108,11 +104,16 @@ class AppNameData {
     }
   }
 
-  Future<bool> update(AppNameModel AppName) async {
+  Future<bool> update(AppNameModel appName) async {
     try {
       _db = await initDb();
       var _store = smbt.intMapStoreFactory.store(_storeName);
-      // TODO: Implementar o Update
+      final finder = smbt.Finder(filter: smbt.Filter.byKey(appName.id));
+      await _store.update(
+        _db,
+        appName.toMap(),
+        finder: finder,
+      );
       return true;
     } catch (error, exception) {
       return false;

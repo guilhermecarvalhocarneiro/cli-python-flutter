@@ -10,7 +10,7 @@
 
 import 'package:flutter/material.dart';
 
-import '../../../../user_interface/widget.dart';
+import '../../../user_interface/widget.dart';
 import '../cubit.dart';
 import '../model.dart';
 

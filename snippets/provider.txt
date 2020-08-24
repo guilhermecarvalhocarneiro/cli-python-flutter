@@ -44,9 +44,9 @@ class AppNameProvider extends ChangeNotifier {
   List<AppNameModel> appNameList = List<AppNameModel>();
   List<AppNameModel> appNameLocalList = List<AppNameModel>();
 
-  fetchAll() async{
+  fetch() async{
     try{
-      appNameList = await _appNameService.fetchAll();
+      appNameList = await _appNameService.fetch();
       notifyListeners();
     } catch (error, exception) {
       _error(error.toString(), exception.toString());
@@ -56,7 +56,7 @@ class AppNameProvider extends ChangeNotifier {
   reload() async{
     try{
       appNameList.clear();
-      fetchAll();
+      fetch();
       notifyListeners();
     } catch (error, exception) {
       _error(error.toString(), exception.toString());
@@ -102,9 +102,9 @@ class AppNameProvider extends ChangeNotifier {
     }
   }
 
-  fetchAllLocal() async{
+  fetchLocal() async{
     try{
-      appNameLocalList = await _appNameData.fetchAll();
+      appNameLocalList = await _appNameData.fetch();
       notifyListeners();
     } catch (error, exception) {
       _error(error.toString(), exception.toString());
@@ -114,7 +114,7 @@ class AppNameProvider extends ChangeNotifier {
   reloadLocal() async{
     try{
       appNameLocalList.clear();
-      fetchAllLocal();
+      fetchLocal();
       notifyListeners();
     } catch (error, exception) {
       _error(error.toString(), exception.toString());

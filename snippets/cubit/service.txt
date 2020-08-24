@@ -31,7 +31,7 @@ class AppNameService {
     if (appName != null) _appName = appName;
   }
 
-  Future<List<AppNameModel>> fetchAll({String url}) async {
+  Future<List<AppNameModel>> fetch({String url}) async {
     try {
       String _url = url != null? url: _uri;
       _appNameList?.clear();
