@@ -1,1 +1,2 @@
 include snippets/*.txt
+include snippets/cubit/*.txt
