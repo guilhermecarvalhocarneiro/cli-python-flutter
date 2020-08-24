@@ -16,8 +16,8 @@ class Parser:
     def __init__(self, app_name, state_manager, replace):
         if app_name == None:
             sys.exit()
-        if (state_manager == None or state_manager.lower() not in ['provider', 'mobx']):
-            print("É obrigatório informar o gerenciado de estado, provider ou mobx")
+        if (state_manager == None or state_manager.lower() not in ['provider', 'mobx', 'cubit']):
+            print("É obrigatório informar o gerenciado de estado, provider, mobx ou cubit")
             sys.exit()
         self.state_manager = state_manager
         self.replace = replace
@@ -42,6 +42,8 @@ class Parser:
         self.views_update_file = Path(f"{self.app_dir_views}/update.dart")
         self.views_delete_file = Path(f"{self.app_dir_views}/delete.dart")
         self.provider_file = Path(f"{self.app_dir}/provider.dart")
+        self.cubit_cubit_file = Path(f"{self.app_dir}/cubit.dart")
+        self.cubit_state_file = Path(f"{self.app_dir}/state.dart")
         self.widget_file = Path(f"{self.app_dir_views}/widget.dart")
         self.content = None
 
@@ -102,8 +104,70 @@ class Parser:
             
             if self.state_manager == 'mobx':
                 self.parse_mobx()
-            else:
+            elif self.state_manager == "provider":
                 self.parse_provider()
+            else:
+                self.parse_cubit()
+        except Exception as error:
+            shutil.rmtree(Path(f"{self.app_dir}"))
+            raise
+
+    def parse_cubit(self):
+        try:
+            self.content = Snippet.get_cubit_snippet()
+            with open(self.cubit_cubit_file, 'w', encoding='utf-8') as data_file:
+                self.parse_content()
+                data_file.write(self.content)
+                self.content = None
+            
+            self.content = Snippet.get_state_cubit_snippet()
+            with open(self.cubit_state_file, 'w', encoding='utf-8') as data_file:
+                self.parse_content()
+                data_file.write(self.content)
+                self.content = None
+
+            self.content = Snippet.get_service_cubit_snippet()
+            with open(self.service_file, 'w', encoding='utf-8') as data_file:
+                self.parse_content()
+                data_file.write(self.content)
+                self.content = None
+
+            self.content = Snippet.get_create_view_cubit_snippet()
+            with open(self.views_create_file, 'w', encoding='utf-8') as data_file:
+                self.parse_content()
+                data_file.write(self.content)
+                self.content = None
+
+            self.content = Snippet.get_index_view_cubit_snippet()
+            with open(self.views_index_file, 'w', encoding='utf-8') as data_file:
+                self.parse_content()
+                data_file.write(self.content)
+                self.content = None
+
+            self.content = Snippet.get_list_view_cubit_snippet()
+            with open(self.views_list_file, 'w', encoding='utf-8') as data_file:
+                self.parse_content()
+                data_file.write(self.content)
+                self.content = None
+
+            self.content = Snippet.get_detail_view_cubit_snippet()
+            with open(self.views_detail_file, 'w', encoding='utf-8') as data_file:
+                self.parse_content()
+                data_file.write(self.content)
+                self.content = None
+
+            self.content = Snippet.get_update_view_cubit_snippet()
+            with open(self.views_update_file, 'w', encoding='utf-8') as data_file:
+                self.parse_content()
+                data_file.write(self.content)
+                self.content = None
+
+            self.content = Snippet.get_delete_view_cubit_snippet()
+            with open(self.views_delete_file, 'w', encoding='utf-8') as data_file:
+                self.parse_content()
+                data_file.write(self.content)
+                self.content = None
+
         except Exception as error:
             shutil.rmtree(Path(f"{self.app_dir}"))
             raise
