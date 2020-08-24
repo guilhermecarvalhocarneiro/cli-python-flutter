@@ -1,22 +1,18 @@
-/// View/Page para criação/inserção de um Atendimento
-
 /// [Travar o arquivo]
 /// Caso deseje "travar" o arquivo para não ser parseado novamente
 /// pelo manage do Django adicione um # antes da palavra abaixo
 /// FileLocked
 
 import 'package:flutter/material.dart';
-import 'package:help/user_interface/font.dart';
-import 'package:help/user_interface/widget.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../user_interface/font.dart';
-import '../../../user_interface/widget.dart';
-import '../../../utils/localization.dart';
-import '../../../utils/process.provider.dart';
-import '../../../utils/util.dart';
+import '../../../../user_interface/font.dart';
+import '../../../../user_interface/widget.dart';
+import '../../../../utils/localization.dart';
+import '../../../../utils/config.dart';
+import '../../../../utils/util.dart';
 import '../model.dart';
-import '../provider.dart';
+import '../cubit.dart';
 
 class AppNameUpdatePage extends StatefulWidget {
   @override
@@ -31,6 +27,8 @@ class _AppNameAddPageState extends State<AppNameUpdatePage>
   AnimationController _animationController;
   AppNameModel _appName = AppNameModel();
 
+  $Attributes$
+
   @override
   void initState() {
     _animationController = AnimationController(vsync: this);
@@ -44,9 +42,6 @@ class _AppNameAddPageState extends State<AppNameUpdatePage>
 
   @override
   Widget build(BuildContext context) {
-    final _appNameProvider = Provider.of<AppNameProvider>(context, listen: false);
-    _appName = _appNameProvider.appNameModel;
-
     return Scaffold(
       key: _scaffoldKey,
       extendBodyBehindAppBar: true,
@@ -58,11 +53,20 @@ class _AppNameAddPageState extends State<AppNameUpdatePage>
   }
   
     Widget _buildBody() {
-    return Stack(
-      children: <Widget>[
-        HeadWidget(),
-        _buildPage(),
-      ],
+    return BlocConsumer<AppNameCubit, AppNameState>(
+      listener: (context, state) {
+      },
+      builder: (context, state) {
+        _appName = context.bloc<AppNameCubit>().appNameModel;
+        $EditedAttributes$
+        
+        return Stack(
+          children: <Widget>[
+            HeadWidget(),
+            _buildPage(),
+          ],
+        );
+      },
     );
   }
 
@@ -73,8 +77,11 @@ class _AppNameAddPageState extends State<AppNameUpdatePage>
           minHeight: MediaQuery.of(context).size.height
         ),
         child: Container(
-        child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 10.0),
+          padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 10.0),
+            margin: EdgeInsets.only(
+               top: Util.getProportionScreenHeight(
+                    context, Config.marginHead),
+             ),
             child: Column(
               mainAxisSize: MainAxisSize.max,
               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -93,16 +100,10 @@ class _AppNameAddPageState extends State<AppNameUpdatePage>
                         _createButton(context),
                       ]
                     ),
-                    Consumer<AppNameProvider>(
-                      builder: (context, item, child) {
-                        return Container();
-                      },
-                    ),
                   ]
                 )
               ],
             ),
-          ),
         ),
       ),
     );
@@ -115,6 +116,7 @@ class _AppNameAddPageState extends State<AppNameUpdatePage>
         mainAxisSize: MainAxisSize.max,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
+          $Form$
         ],
       ),
     );
@@ -131,6 +133,7 @@ class _AppNameAddPageState extends State<AppNameUpdatePage>
             onPress: () {
               if (_formAppName.currentState.validate()) {
                 setState(() {
+                  $AttributesData$
                   _put();
                 });
               }
@@ -141,14 +144,16 @@ class _AppNameAddPageState extends State<AppNameUpdatePage>
   }
   
   void _clearForm(){
+    $ClearData$
   }
 
   void _put() async {
-    final _appNameProvider = Provider.of<AppNameProvider>(context, listen: false);
+    final _appNameCubit = context.bloc<AppNameCubit>();
 
     try{
-      _appNameProvider.appNameModel = _appName;
-      _appNameProvider.put();
+       $GetValuesControllers$
+
+      _appNameCubit.put(_appName);
     }catch (e){
 
     }

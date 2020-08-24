@@ -1,6 +1,3 @@
-/// View/Page para listagem dos registro do AppName
-/// O método fetchAll é invocado no método initState que ocorre apenas
-/// apenas no primeiro momento de construção da View/Page. 
 
 /// [Travar o arquivo]
 /// Caso deseje "travar" o arquivo para não ser parseado novamente
@@ -8,18 +5,17 @@
 /// FileLocked
 
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'detail.dart';
 import 'create.dart';
 import '../model.dart';
-import '../provider.dart';
-import '../../../utils/util.dart';
-import '../../../utils/config.dart';
-import '../../../utils/localization.dart';
-import '../../../user_interface/font.dart';
-import '../../../user_interface/widget.dart';
-import '../../../utils/process.provider.dart';
+import '../cubit.dart';
+import '../../../../utils/util.dart';
+import '../../../../utils/config.dart';
+import '../../../../utils/localization.dart';
+import '../../../../user_interface/font.dart';
+import '../../../../user_interface/widget.dart';
 
 class AppNameListPage extends StatefulWidget {
   @override
@@ -51,7 +47,9 @@ class AppNameListPageState extends State<AppNameListPage>
       body: _buildBody(),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
-        onPressed: () {},
+        onPressed: () {
+          Navigator.push(context, MaterialPageRoute(builder: (_) => AppNameAddPage()));
+        },
       ),
     );
   }
@@ -83,38 +81,60 @@ class AppNameListPageState extends State<AppNameListPage>
     );
   }
 
-  Widget _listBuilder(){
-    final _appNameProvider = Provider.of<AppNameProvider>(context);
-    return Expanded(
-      child: ListView.builder(
-      itemCount: _appNameProvider.appNameList.length,
-      itemBuilder: (BuildContext context, int index) {
-        AppNameModel _appName = _appNameProvider.appNameList[index];
-        return GestureDetector(
-          onTap: () {
-            _appNameProvider.appNameModel = _appName;
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) =>
-                    AppNameDetailPage(),
-              ),
-            );
-          },
-          child: customCard(
-              context: context, 
-              child: Text(_appName.toString()),
-          ),
+  _listBuilder() {
+    return BlocConsumer<AppNameCubit, AppNameState>(
+      listener: (context, state) {
+        if (state is AppNameErrorState){
+          _showMessage(state.error, error: true);
+        }
+        if(state is AppNameSuccessState){
+          _showMessage(state.successMessage);
+        }
+      },
+      builder: (context, state) {
+        final _appNameCubit = context.bloc<AppNameCubit>();
+        if (state is AppNameProcessState) {
+          return customProcessingCardModalCenter(context);
+        }
+        return _appNameCubit.appNameList == null 
+           ? Container() 
+           : Expanded(
+            child: Container(
+             margin: EdgeInsets.only(
+               top: Util.getProportionScreenHeight(
+                    context, Config.marginHead),
+             ),
+             child: ListView.builder(
+              itemCount: _appNameCubit.appNameList.length,
+              itemBuilder: (context, index) {
+                AppNameModel _appName = _appNameCubit.appNameList[index];
+                return GestureDetector(
+                  onTap: () {
+                    _appNameCubit.appNameModel = _appName;
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => AppNameDetailPage(),
+                      ),
+                    );
+                  },
+                  child: customCard(
+                    context: context,
+                    child: Text(_appName.toString()),
+                  ),
+                );
+              },
+            )
+          )
         );
       },
-      ),
     );
   }
 
+
   Future _refresh() async {
-    final _appNameProvider = Provider.of<AppNameProvider>(context, listen: false);
     try {
-      await _appNameProvider.reload();
+    // TODO implementar o método de refresh da tela
     } catch (error) {
 
     }
@@ -154,8 +174,7 @@ class AppNameListPageState extends State<AppNameListPage>
   }
 
   Future<void> _loadData() async {
-    final _appNameProvider = Provider.of<AppNameProvider>(context, listen: false);
-    await _appNameProvider.fetchAll();
-    debugPrint("Carregando ...");
+    final _appNameCubit = context.bloc<AppNameCubit>();
+    await _appNameCubit.fetch();
   }
 }

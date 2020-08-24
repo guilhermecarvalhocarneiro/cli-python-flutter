@@ -9,13 +9,10 @@
 /// FileLocked
 
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
-import '../../../user_interface/widget.dart';
-import '../../../utils/process.provider.dart';
+import '../../../../user_interface/widget.dart';
+import '../cubit.dart';
 import '../model.dart';
-import '../provider.dart';
-
 
 class AppNameIndexPage extends StatefulWidget {
   @override
@@ -36,7 +33,6 @@ class _AppNameIndexPageState extends State<AppNameIndexPage>
 
   @override
   Widget build(BuildContext context) {
-    final _appNameProvider = Provider.of<AppNameProvider>(context, listen: false);
     return Scaffold(
         key: _scaffoldKey,
         extendBodyBehindAppBar: true,
@@ -51,7 +47,7 @@ class _AppNameIndexPageState extends State<AppNameIndexPage>
     return Stack(
       children: <Widget>[
         HeadWidget(),
-        ButtonBarWidget()
+        ContentWidget()
       ],
     );
   }

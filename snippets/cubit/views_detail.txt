@@ -1,4 +1,3 @@
-/// View/Page para detalhamento de um Atendimento
 
 /// [Travar o arquivo]
 /// Caso deseje "travar" o arquivo para não ser parseado novamente
@@ -6,15 +5,15 @@
 /// FileLocked
 
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../user_interface/font.dart';
-import '../../../user_interface/widget.dart';
-import '../../../utils/localization.dart';
-import '../../../utils/process.provider.dart';
-import '../../../utils/util.dart';
+import '../../../../user_interface/font.dart';
+import '../../../../user_interface/widget.dart';
+import '../../../../utils/localization.dart';
+import '../../../../utils/config.dart';
+import '../../../../utils/util.dart';
 import '../model.dart';
-import '../provider.dart';
+import '../cubit.dart';
 import 'update.dart';
 
 class AppNameDetailPage extends StatefulWidget {
@@ -37,27 +36,30 @@ class _AppNameDetailPageState extends State<AppNameDetailPage>
 
   @override
   Widget build(BuildContext context) {
-    final _appNameProvider = Provider.of<AppNameProvider>(context, listen: false);
-    _appName = _appNameProvider.appNameModel;
-    return Scaffold(
-      key: _scaffoldKey,
-      extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent
-      ),
-      body: _buildBody(),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(
-          Icons.update,
-        ),
-        onPressed: () {
-          _appNameProvider.appNameModel = _appName;
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => AppNameUpdatePage(),
+    return BlocConsumer<AppNameCubit, AppNameState>(
+      listener: (context, state) {},
+      builder: (context, state) {
+        _appName = context.bloc<AppNameCubit>().appNameModel;
+        return Scaffold(
+          key: _scaffoldKey,
+          extendBodyBehindAppBar: true,
+          appBar: AppBar(backgroundColor: Colors.transparent),
+          body: _buildBody(),
+          floatingActionButton: FloatingActionButton(
+            child: Icon(
+              Icons.update,
             ),
-          );
-        },
-      ),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => AppNameUpdatePage(),
+                ),
+              );
+            },
+          ),
+        );
+      },
     );
   }
 
@@ -74,8 +76,12 @@ class _AppNameDetailPageState extends State<AppNameDetailPage>
     return SingleChildScrollView(
       child: Container(
         height: MediaQuery.of(context).size.height,
-        child: Padding(
+        child: Container(
           padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 10.0),
+          margin: EdgeInsets.only(
+               top: Util.getProportionScreenHeight(
+                    context, Config.marginHead),
+             ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
