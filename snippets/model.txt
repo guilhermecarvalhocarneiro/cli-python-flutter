@@ -14,13 +14,13 @@ class AppNameModel {
 
   AppNameModel({this.id, this.nextUrl, this.previousUrl});
 
-  AppNameModel.fromJson(Map<String, dynamic> json) {
+  AppNameModel.fromMap(Map<String, dynamic> json) {
     id = json['id'];
     nextUrl = json['nextUrl'];
     previousUrl = json['previousUrl'];
   }
 
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
     data['nextUrl'] = this.nextUrl;

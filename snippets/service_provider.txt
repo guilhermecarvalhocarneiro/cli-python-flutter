@@ -48,7 +48,7 @@ class AppNameService {
             ? dataResponse["results"]
             : dataResponse;
         for (var data in _dataItens) {
-          AppNameModel appNameModel = AppNameModel.fromJson(data);
+          AppNameModel appNameModel = AppNameModel.fromMap(data);
           appNameModel.nextUrl = _next;
           appNameModel.previousUrl = _previous;
           _appNameList.add(appNameModel);
@@ -78,7 +78,7 @@ class AppNameService {
             ? dataResponse["results"]
             : dataResponse;
         for (var data in _dataItens) {
-          AppNameModel appNameModel = AppNameModel.fromJson(data);
+          AppNameModel appNameModel = AppNameModel.fromMap(data);
           appNameModel.nextUrl = _next;
           appNameModel.previousUrl = _previous;
           _appNameList.add(appNameModel);
@@ -97,7 +97,7 @@ class AppNameService {
       final CustomDio _dio = CustomDio(_uri);
       final data = await _dio.getHttp();
       if (data != null) {
-        _appName = AppNameModel.fromJson(data);
+        _appName = AppNameModel.fromMap(data);
       }
     } catch (error, exception) {
       _error(error.toString(), exception.toString());
@@ -110,10 +110,10 @@ class AppNameService {
       String _url = "";
       final CustomDio _dio = CustomDio(_uri);
       _dio.makeHeadersAuthentication();
-      final data = FormData.fromMap(appName.toJson());
+      final data = FormData.fromMap(appName.toMap());
       final dataResponse = await _dio.postHttp(data);
       if (dataResponse != null) {
-        appName = AppNameModel.fromJson(dataResponse);
+        appName = AppNameModel.fromMap(dataResponse);
         _success("ok");
       }
     } catch (error, exception) {
@@ -127,10 +127,10 @@ class AppNameService {
       String _url = "";
       final CustomDio _dio = CustomDio(_uri);
       _dio.makeHeadersAuthentication();
-      final FormData data = FormData.fromMap({appName.toJson()});
+      final FormData data = FormData.fromMap({appName.toMap()});
       final dataResponse = await _dio.putHttp(data);
       if (dataResponse != null) {
-        return AppNameModel.fromJson(dataResponse);
+        return AppNameModel.fromMap(dataResponse);
         _success("ok");
       }
     } catch (error, exception) {
@@ -147,7 +147,7 @@ class AppNameService {
       final FormData data = FormData.fromMap({});
       final dataResponse = await _dio.patchHttp(data);
       if (dataResponse != null) {
-        return AppNameModel.fromJson(dataResponse);
+        return AppNameModel.fromMap(dataResponse);
         _success("ok");
       }
     } catch (error, exception) {
@@ -161,7 +161,7 @@ class AppNameService {
       String _url = "";
       final CustomDio _dio = CustomDio(_uri);
       _dio.makeHeadersAuthentication();
-      final data = appName.toJson();
+      final data = appName.toMap();
       final dataResponse = await _dio.deleteHttp(data);
       if (dataResponse != null) {
         return true;

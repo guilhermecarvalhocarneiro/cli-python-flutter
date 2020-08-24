@@ -47,7 +47,7 @@ class AppNameData {
       var _store = smbt.intMapStoreFactory.store(_storeName);
       var _data = await _store.find(_db);
       return _data.map((snapshot){
-        final _result = AppNameModel.fromJson(snapshot.value);
+        final _result = AppNameModel.fromMap(snapshot.value);
       }).toList();
     } catch (e) {
       return null;
@@ -61,7 +61,7 @@ class AppNameData {
       _db = await initDb();
       var _store = smbt.intMapStoreFactory.store(_storeName);
       var _data = await _store.findFirst(_db);
-      return AppNameModel.fromJson(_data.value);
+      return AppNameModel.fromMap(_data.value);
     } catch (e) {
       return null;
     } finally {
@@ -73,7 +73,7 @@ class AppNameData {
     try {
       _db = await initDb();
       var _store = smbt.intMapStoreFactory.store(_storeName);
-      await _store.add(_db, appName.toJson());
+      await _store.add(_db, appName.toMap());
       return true;
     } catch (error, exception) {
       return false;
