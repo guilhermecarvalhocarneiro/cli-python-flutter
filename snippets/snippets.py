@@ -102,15 +102,15 @@ class Snippet():
         return open(os.path.join(Snippet.get_path(), "cubit", "cubit.txt"), encoding='utf-8').read()
 
     @staticmethod
-    def get_status_cubit_snippet():
-        return open(os.path.join(Snippet.get_path(), "cubit", "status.txt"), encoding='utf-8').read()
+    def get_state_cubit_snippet():
+        return open(os.path.join(Snippet.get_path(), "cubit", "state.txt"), encoding='utf-8').read()
 
     @staticmethod
     def get_create_view_cubit_snippet():
         return open(os.path.join(Snippet.get_path(), "cubit", "views_create.txt"), encoding='utf-8').read()
 
     @staticmethod
-    def get_index_view_provider_snippet():
+    def get_index_view_cubit_snippet():
         return open(os.path.join(Snippet.get_path(), "cubit", "views_index.txt"), encoding='utf-8').read()
 
     @staticmethod

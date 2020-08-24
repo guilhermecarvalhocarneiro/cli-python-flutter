@@ -1,5 +1,5 @@
 /// View/Page para listagem dos registro do AppName
-/// O método fetchAll é invocado no método initState que ocorre apenas
+/// O método fetch é invocado no método initState que ocorre apenas
 /// apenas no primeiro momento de construção da View/Page. 
 
 /// [Travar o arquivo]
@@ -155,7 +155,7 @@ class AppNameListPageState extends State<AppNameListPage>
 
   Future<void> _loadData() async {
     final _appNameProvider = Provider.of<AppNameProvider>(context, listen: false);
-    await _appNameProvider.fetchAll();
+    await _appNameProvider.fetch();
     debugPrint("Carregando ...");
   }
 }

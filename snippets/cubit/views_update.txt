@@ -6,11 +6,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../user_interface/font.dart';
-import '../../../../user_interface/widget.dart';
-import '../../../../utils/localization.dart';
-import '../../../../utils/config.dart';
-import '../../../../utils/util.dart';
+import '../../../user_interface/font.dart';
+import '../../../user_interface/widget.dart';
+import '../../../utils/localization.dart';
+import '../../../utils/config.dart';
+import '../../../utils/util.dart';
 import '../model.dart';
 import '../cubit.dart';
 
@@ -26,8 +26,6 @@ class _AppNameAddPageState extends State<AppNameUpdatePage>
 
   AnimationController _animationController;
   AppNameModel _appName = AppNameModel();
-
-  $Attributes$
 
   @override
   void initState() {
@@ -58,7 +56,6 @@ class _AppNameAddPageState extends State<AppNameUpdatePage>
       },
       builder: (context, state) {
         _appName = context.bloc<AppNameCubit>().appNameModel;
-        $EditedAttributes$
         
         return Stack(
           children: <Widget>[
@@ -116,7 +113,6 @@ class _AppNameAddPageState extends State<AppNameUpdatePage>
         mainAxisSize: MainAxisSize.max,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
-          $Form$
         ],
       ),
     );
@@ -133,7 +129,6 @@ class _AppNameAddPageState extends State<AppNameUpdatePage>
             onPress: () {
               if (_formAppName.currentState.validate()) {
                 setState(() {
-                  $AttributesData$
                   _put();
                 });
               }
@@ -144,15 +139,11 @@ class _AppNameAddPageState extends State<AppNameUpdatePage>
   }
   
   void _clearForm(){
-    $ClearData$
   }
 
   void _put() async {
     final _appNameCubit = context.bloc<AppNameCubit>();
-
     try{
-       $GetValuesControllers$
-
       _appNameCubit.put(_appName);
     }catch (e){
 
