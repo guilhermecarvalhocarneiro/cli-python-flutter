@@ -1,4 +1,3 @@
-/// View/Page para criação/inserção de um Atendimento
 
 /// [Travar o arquivo]
 /// Caso deseje "travar" o arquivo para não ser parseado novamente
@@ -6,12 +5,14 @@
 /// FileLocked
 
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../user_interface/font.dart';
-import '../../../user_interface/widget.dart';
+import '../../../../user_interface/font.dart';
+import '../../../../user_interface/widget.dart';
+import '../../../../utils/config.dart';
+import '../../../../utils/util.dart';
+import '../cubit.dart';
 import '../model.dart';
-import '../provider.dart';
 
 
 class AppNameAddPage extends StatefulWidget {
@@ -21,11 +22,12 @@ class AppNameAddPage extends StatefulWidget {
 
 class _AppNameAddPageState extends State<AppNameAddPage> 
   with SingleTickerProviderStateMixin{
-  final _scaffoldKey = GlobalKey<ScaffoldState>();
+  final _scaffoldKey = GlobalKey<ScaffoldState>();  
   AnimationController _animationController;
   AppNameModel _appName = AppNameModel();
   final _formAppName = GlobalKey<FormState>();
-  
+  $Attributes$
+
   @override
   void initState() {
     _animationController = AnimationController(vsync: this);
@@ -59,15 +61,17 @@ class _AppNameAddPageState extends State<AppNameAddPage>
   }
 
   Widget _buildPage(){
-    final _appNameProvider = Provider.of<AppNameProvider>(context, listen: false);
     return SingleChildScrollView(
       child: ConstrainedBox(
         constraints: new BoxConstraints(
           minHeight: MediaQuery.of(context).size.height
         ),
         child: Container(
-        child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 10.0),
+        padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 10.0),
+         margin: EdgeInsets.only(
+               top: Util.getProportionScreenHeight(
+                    context, Config.marginHead),
+             ),
             child: Column(
               mainAxisSize: MainAxisSize.max,
               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -78,7 +82,13 @@ class _AppNameAddPageState extends State<AppNameAddPage>
                     'Cadastrar AppName',
                   ),
                 ),
-                Stack(
+
+                BlocConsumer<AppNameCubit, AppNameState>(
+                listener: (context, state) {
+                },
+                builder: (context, state) {
+                    _appName = context.bloc<AppNameCubit>().appNameModel;
+                    return Stack(
                   children : <Widget>[
                     Column(
                       children: <Widget>[
@@ -86,16 +96,13 @@ class _AppNameAddPageState extends State<AppNameAddPage>
                         _createButton(context),
                       ]
                     ),
-                    Consumer<AppNameProvider>(
-                      builder: (context, item, child) {
-                        return Container();
-                      },
-                    )
                   ]
+                );
+                },
                 )
+                
               ],
             ),
-          ),
         ),
       ),
     );
@@ -108,7 +115,7 @@ class _AppNameAddPageState extends State<AppNameAddPage>
         mainAxisSize: MainAxisSize.max,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
-          
+          $Form$
         ],
       ),
     );
@@ -124,10 +131,7 @@ class _AppNameAddPageState extends State<AppNameAddPage>
             context: context,
             onPress: () {
               if (_formAppName.currentState.validate()) {
-                setState(() {
-                   
-                    _post();
-                });
+                _post();
               }
             },
           ),
@@ -136,14 +140,15 @@ class _AppNameAddPageState extends State<AppNameAddPage>
   }
 
   void _clearForm(){
-    
+    $ClearData$
   }
 
   void _post() async {
-    final _appNameProvider = Provider.of<AppNameProvider>(context, listen: false);
+    final _appNameCubit = context.bloc<AppNameCubit>();
     try{
-      _appNameProvider.appNameModel = _appName;
-      _appNameProvider.post();
+      $GetValuesControllers$
+      _appNameCubit.appNameModel = _appName;
+      _appNameCubit.post(_appName);
     }catch (e){
 
     }
