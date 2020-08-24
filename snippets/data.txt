@@ -9,27 +9,20 @@ import 'package:path/path.dart';
 import 'package:sembast/sembast_io.dart' as smbt_io;
 import 'package:sembast/sembast.dart' as smbt;
 import 'package:path_provider/path_provider.dart';
+import 'package:flutter/foundation.dart';
+
 
 import 'model.dart';
-import '../../../utils/config.dart';
+import '../../utils/config.dart';
 
 class AppNameData {
-
-  // Istanciando a classe AppNameModel
   AppNameModel _appNameModel = AppNameModel();
-
   static final AppNameData _instance = AppNameData.internal();
-
   factory AppNameData() => _instance;
-
   AppNameData.internal();
-
-  // Iniciando o objeto DataBase
   smbt.Database _db;
-
   final String _storeName = "appNameStoreDB";
 
-  // Método para inicialiar o banco de dados criando a tabela.
   // TODO: Alterar o nome do DbName na linha 41 para o nome do banco do projeto
   Future<smbt.Database> initDb() async {
     try {
@@ -42,16 +35,12 @@ class AppNameData {
       // open the database
       return await smbt_io.databaseFactoryIo.openDatabase(dbPath);
     } catch (error, exception) {
-      DebugPrint.error(
+      debugPrint(
           "Erro no método initDB -> error: $error, message: $exception");
     }
     return null;
   }
 
-  /// Método para recuperar todos os dados de AppName
-  ///
-  /// returns:
-  ///   Instância do AppNameModel
   Future<List<AppNameModel>> fetchAll() async {
     try {
       _db = await initDb();
@@ -67,10 +56,6 @@ class AppNameData {
     }
   }
 
-  /// Método para recuperar o primeiro registro de AppName
-  ///
-  /// returns:
-  ///   Instância do AppNameModel
   Future<AppNameModel> get(int id) async {
     try {
       _db = await initDb();
@@ -84,15 +69,10 @@ class AppNameData {
     }
   }
 
-  /// Método para salvar localmente um(a) AppName
-  ///
-  /// returns:
-  ///    bool -> true salvo com sucesso, false ocorreu um erro
   Future<bool> save(AppNameModel appName) async {
     try {
       _db = await initDb();
       var _store = smbt.intMapStoreFactory.store(_storeName);
-      // Salvando o dado do novo appName
       await _store.add(_db, appName.toMap());
       return true;
     } catch (error, exception) {
@@ -102,15 +82,10 @@ class AppNameData {
     }
   }
 
-  /// Método para deletar todos os registros do(a) AppName
-  ///
-  /// returns:
-  ///    bool -> true salvo com sucesso, false ocorreu um erro
   Future<bool> deleteAll() async {
     try {
       _db = await initDb();
       var _store = smbt.intMapStoreFactory.store(_storeName);
-      // Apagando todos os registros anteriores
       await _store.delete(_db);
       return true;
     } catch (error, exception) {
@@ -120,15 +95,10 @@ class AppNameData {
     }
   }
 
-  /// Método para deletar um registro do(a) AppName
-  ///
-  /// returns:
-  ///    bool -> true salvo com sucesso, false ocorreu um erro
   Future<bool> delete(int id) async {
     try {
       _db = await initDb();
       var _store = smbt.intMapStoreFactory.store(_storeName);
-      // Apagando todos os registros anteriores
       await _store.delete(_db);
       return true;
     } catch (error, exception) {
@@ -138,10 +108,6 @@ class AppNameData {
     }
   }
 
-  /// Método para deletar um registro do(a) AppName
-  ///
-  /// returns:
-  ///    bool -> true salvo com sucesso, false ocorreu um erro
   Future<bool> update(AppNameModel AppName) async {
     try {
       _db = await initDb();

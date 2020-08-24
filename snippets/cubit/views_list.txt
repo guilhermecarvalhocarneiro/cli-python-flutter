@@ -1,0 +1,180 @@
+
+/// [Travar o arquivo]
+/// Caso deseje "travar" o arquivo para não ser parseado novamente
+/// pelo manage do Django adicione um # antes da palavra abaixo
+/// FileLocked
+
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'detail.dart';
+import 'create.dart';
+import '../model.dart';
+import '../cubit.dart';
+import '../../../../utils/util.dart';
+import '../../../../utils/config.dart';
+import '../../../../utils/localization.dart';
+import '../../../../user_interface/font.dart';
+import '../../../../user_interface/widget.dart';
+
+class AppNameListPage extends StatefulWidget {
+  @override
+  AppNameListPageState createState() => AppNameListPageState();
+}
+
+class AppNameListPageState extends State<AppNameListPage>
+  with SingleTickerProviderStateMixin {
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+  AnimationController _animationController;
+  List<AppNameModel> _appNameList = List<AppNameModel>();
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(vsync: this);
+    _loadData();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    String _title = "AppName";
+    return Scaffold(
+      key: _scaffoldKey,
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+      ),
+      body: _buildBody(),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.add),
+        onPressed: () {
+          Navigator.push(context, MaterialPageRoute(builder: (_) => AppNameAddPage()));
+        },
+      ),
+    );
+  }
+
+    Widget _buildBody() {
+    return Stack(
+      children: <Widget>[
+        HeadWidget(),
+        _buildPage()
+      ],
+    );
+  }
+
+  Widget _buildPage() {
+    return Container(
+      alignment: FractionalOffset.topLeft,
+      child: RefreshIndicator(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 10.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              _listBuilder(),
+            ],
+          ),
+        ),
+        onRefresh: _refresh,
+      ),
+    );
+  }
+
+  _listBuilder() {
+    return BlocConsumer<AppNameCubit, AppNameState>(
+      listener: (context, state) {
+        if (state is AppNameErrorState){
+          _showMessage(state.error, error: true);
+        }
+        if(state is AppNameSuccessState){
+          _showMessage(state.successMessage);
+        }
+      },
+      builder: (context, state) {
+        final _appNameCubit = context.bloc<AppNameCubit>();
+        if (state is AppNameProcessState) {
+          return customProcessingCardModalCenter(context);
+        }
+        return _appNameCubit.appNameList == null 
+           ? Container() 
+           : Expanded(
+            child: Container(
+             margin: EdgeInsets.only(
+               top: Util.getProportionScreenHeight(
+                    context, Config.marginHead),
+             ),
+             child: ListView.builder(
+              itemCount: _appNameCubit.appNameList.length,
+              itemBuilder: (context, index) {
+                AppNameModel _appName = _appNameCubit.appNameList[index];
+                return GestureDetector(
+                  onTap: () {
+                    _appNameCubit.appNameModel = _appName;
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => AppNameDetailPage(),
+                      ),
+                    );
+                  },
+                  child: customCard(
+                    context: context,
+                    child: Text(_appName.toString()),
+                  ),
+                );
+              },
+            )
+          )
+        );
+      },
+    );
+  }
+
+
+  Future _refresh() async {
+    try {
+    // TODO implementar o método de refresh da tela
+    } catch (error) {
+
+    }
+  }
+
+  _showMessage(String message, {bool error}) {
+    setState(() {
+      _scaffoldKey.currentState.showSnackBar(
+        SnackBar(
+          content: Text(message),
+          backgroundColor: error == true ? Colors.red : Colors.blue,
+        ),
+      );
+    });
+  }
+
+  _makeToast(String texto, {erro = false, altura = 80.0}) async {
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text(''),
+          content: Text(texto),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('Cancelar'),
+              onPressed: () => Navigator.pop(context),
+            ),
+            FlatButton(
+              child: Text('Excluir'),
+              onPressed: () {},
+            )
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _loadData() async {
+    final _appNameCubit = context.bloc<AppNameCubit>();
+    await _appNameCubit.fetch();
+  }
+}

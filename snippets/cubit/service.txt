@@ -15,36 +15,39 @@
 /// FileLocked
 
 import 'package:dio/dio.dart';
-import 'package:get_it/get_it.dart';
-import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 
 import 'model.dart';
 import '../../utils/config.dart';
 import '../../utils/custom_dio.dart';
-import '../../utils/process.controller.dart';
+import '../../utils/util.dart';
 
 class AppNameService {
   static String _uri = "";
   AppNameModel _appName = AppNameModel();
   List<AppNameModel> _appNameList = List<AppNameModel>();
-  ProcessController _processController = GetIt.I<ProcessController>();
+
   AppNameService({AppNameModel appName, List<AppNameModel> appNameList}) {
     if (appName != null) _appName = appName;
   }
 
-  Future<List<AppNameModel>> fetchAll() async {    
+  Future<List<AppNameModel>> fetchAll({String url}) async {
     try {
-      String _url;
+      String _url = url != null? url: _uri;
       _appNameList?.clear();
-      CustomDio _dio = CustomDio(_url);
+      final CustomDio _dio = CustomDio(_uri);
       _dio.makeHeadersAuthentication();
-      var dataResponse = await _dio.getHttp();
+      final dataResponse = await _dio.getHttp();
       if (dataResponse != null) {
-        _appNameList?.clear();
-        _success("ok");
-        String _next = dataResponse["next"] ?? "";
-        String _previous = dataResponse["previous"] ?? "";
-        for (var data in dataResponse["results"]) {
+        final String _next =
+            dataResponse.containsKey('nextUrl') ? dataResponse["next"] : "";
+        final String _previous = dataResponse.containsKey('previousUrl')
+            ? dataResponse["previous"]
+            : "";
+        final _dataItens = dataResponse.containsKey('results')
+            ? dataResponse["results"]
+            : dataResponse;
+        for (var data in _dataItens) {
           AppNameModel appNameModel = AppNameModel.fromMap(data);
           appNameModel.nextUrl = _next;
           appNameModel.previousUrl = _previous;
@@ -59,21 +62,25 @@ class AppNameService {
 
   Future<List<AppNameModel>> getMore(String uri) async {
     List<AppNameModel> _appNameList = List<AppNameModel>();
-    String _url;
     try {
-      CustomDio _dio = CustomDio(_url);
+      final CustomDio _dio = CustomDio(uri);
       _dio.makeHeadersAuthentication();
-      var dataResponse = await _dio.getHttp();
+      final dataResponse = await _dio.getHttp();
       if (dataResponse != null) {
-        String _next = dataResponse["next"] ?? "";
-        String _previous = dataResponse["previous"] ?? "";
-        for (var data in dataResponse["results"]) {
+        final String _next =
+            dataResponse.containsKey('nextUrl') ? dataResponse["next"] : "";
+        final String _previous = dataResponse.containsKey('previousUrl')
+            ? dataResponse["previous"]
+            : "";
+        final _dataItens = dataResponse.containsKey('results')
+            ? dataResponse["results"]
+            : dataResponse;
+        for (var data in _dataItens) {
           AppNameModel appNameModel = AppNameModel.fromMap(data);
           appNameModel.nextUrl = _next;
           appNameModel.previousUrl = _previous;
           _appNameList.add(appNameModel);
         }
-        _success("ok");
       }
     } catch (error, exception) {
       _error(error, exception.toString());
@@ -82,30 +89,27 @@ class AppNameService {
   }
 
   Future<AppNameModel> detail(AppNameModel appName) async {
-    String _url = "";
-
+    _uri += "${appName.id}/";
     try {
-      CustomDio _dio = CustomDio(_url);
-      var data = await _dio.getHttp();
+      final CustomDio _dio = CustomDio(_uri);
+      final data = await _dio.getHttp();
       if (data != null) {
         _appName = AppNameModel.fromMap(data);
       }
     } catch (error, exception) {
-        _error(error.toString(), exception.toString());
+      _error(error.toString(), exception.toString());
     }
     return _appName;
-  }  
+  }
 
   Future<AppNameModel> post(AppNameModel appName) async {
     try {
-      String _uri = "${Config.uri}appName";
-      CustomDio _dio = CustomDio(_uri);
+      final CustomDio _dio = CustomDio(_uri);
       _dio.makeHeadersAuthentication();
-      var data = appName.toMap();
-      var dataResponse = await _dio.postHttp(data);
+      final data = FormData.fromMap(appName.toMap());
+      final dataResponse = await _dio.postHttp(data);
       if (dataResponse != null) {
         appName = AppNameModel.fromMap(dataResponse);
-        _success("ok");
       }
     } catch (error, exception) {
       _error(error, exception.toString());
@@ -114,14 +118,29 @@ class AppNameService {
   }
 
   Future<AppNameModel> put(AppNameModel appName) async {
+    _uri += "${appName.id}/";
     try {
-      String _uri = "${Config.uri}appName/${appName.id}";
-      CustomDio _dio = CustomDio(_uri);
+      final CustomDio _dio = CustomDio(_uri);
       _dio.makeHeadersAuthentication();
-      FormData data = FormData.fromMap({});
-      var dataResponse = await _dio.patchHttp(data);
+      final FormData data = FormData.fromMap(appName.toMap());
+      final dataResponse = await _dio.putHttp(data, appName.id.toString());
       if (dataResponse != null) {
-        _success("ok");
+        return AppNameModel.fromMap(dataResponse);
+      }
+    } catch (error, exception) {
+      _error(error, exception.toString());
+    }
+    return null;
+  }
+
+  Future<AppNameModel> patch(AppNameModel appName) async {
+    _uri += "${appName.id}/";
+    try {
+      final CustomDio _dio = CustomDio(_uri);
+      _dio.makeHeadersAuthentication();
+      final FormData data = FormData.fromMap(appName.toMap());
+      final dataResponse = await _dio.patchHttp(data);
+      if (dataResponse != null) {
         return AppNameModel.fromMap(dataResponse);
       }
     } catch (error, exception) {
@@ -131,14 +150,13 @@ class AppNameService {
   }
 
   Future<bool> delete(AppNameModel appName) async {
+    _uri += "${appName.id}/";
     try {
-      String _uri = "${Config.uri}appName/${appName.id}";
-      CustomDio _dio = CustomDio(_uri);
+      final CustomDio _dio = CustomDio(_uri);
       _dio.makeHeadersAuthentication();
-      var data = appName.toMap();
-      var dataResponse = await _dio.deleteHttp(data, appName.id.toString());
+      final data = appName.toMap();
+      final dataResponse = await _dio.deleteHttp(data, appName.id.toString());
       if (dataResponse != null) {
-        _success("ok");
         return true;
       }
       return false;
@@ -147,23 +165,20 @@ class AppNameService {
       return false;
     }
   }
- 
- void _success(String message) async {
-   try {
-     _processController.withSuccess(message: message);
-   } catch (error) {
-     debugPrint("Ocorreu um erro no service de AppName: $error");
-   }
- }
- 
- void _error(String error, String exception) async {
-   try {
-     _processController.withError(
-       error: error,
-       exception: exception,
-     );
-   } catch (error) {
-     debugPrint("Ocorreu um erro no service de AppName: $error");
-   }
- }
+
+  void _success(String message, {int statusCode}) async {
+    try {
+      debugPrint("Mensagem: $message, Status: $statusCode");
+    } catch (e) {
+      debugPrint("Ocorreu um erro no método error: $e");
+    }
+  }
+
+  void _error(String error, String exception, {int statusCode}) async {
+    try {
+      debugPrint("Error: $error, Exception: $exception");
+    } catch (e) {
+      debugPrint("Ocorreu um erro no método error: $e");
+    }
+  }
 }

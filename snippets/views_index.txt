@@ -63,7 +63,7 @@ class _IndexAppNamePageState extends State<IndexAppNamePage> {
   @override
   void dispose() {
     _disposers.forEach((dispose) => dispose());
-    _animationController.dispose();
+    _animationController?.dispose();
     _model = null;
     super.dispose();
   }

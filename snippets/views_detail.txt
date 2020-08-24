@@ -63,7 +63,7 @@ class _DetailAppNamePageState extends State<DetailAppNamePage> {
   @override
   void dispose() {
     _disposers.forEach((dispose) => dispose());
-    _animationController.dispose();
+    _animationController?.dispose();
     _model = null;
     super.dispose();
   }

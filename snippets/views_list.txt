@@ -66,8 +66,8 @@ class _ListAppNamePageState extends State<ListAppNamePage> {
   @override
   void dispose() {
     _disposers.forEach((dispose) => dispose());
-    _scrollController.dispose();
-    _animationController.dispose();
+    _scrollController?.dispose();
+    _animationController?.dispose();
     _model = null;
     super.dispose();
   }

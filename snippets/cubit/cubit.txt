@@ -1,0 +1,132 @@
+/// Os Métodos padrões gerados são:
+///   Métodos da API
+///     fecth() -> Recupera a lista de AppName.
+///     reload() -> Recarrega a lista de AppName.
+///     detail() -> Recupera os detalhes de um AppName.
+///     post() -> Salva um novo AppName.
+///     put() -> Atualiza os dados de um AppName.
+///     delete() -> Deleta um AppName.
+
+///   Métodos do Data
+///     fetchLocal() -> Recupera a lista de AppName
+///     reloadLocal() -> Recarrega a lista de AppName
+///     detailLocal() -> Recupera os detalhes de um AppName
+///     saveLocal() -> Salva um novo AppName
+///     updateLocal() -> Atualiza um novo AppName
+///     deleteLocal() -> Deleta um novo AppName
+///     deleteAllLocal() -> Deleta um novo AppName
+
+/// [Travar o arquivo]
+/// Caso deseje "travar" o arquivo para não ser parseado novamente
+/// pelo manage do Django adicione um # antes da palavra abaixo
+/// FileLocked
+
+import 'package:bloc/bloc.dart';
+import 'package:equatable/equatable.dart';
+import 'model.dart';
+import 'service.dart';
+import 'data.dart';
+
+part 'state.dart';
+
+class AppNameCubit extends Cubit<AppNameState> {
+  AppNameService _service;
+  AppNameData _data;
+  bool _loading = false;
+  AppNameModel appNameModel;
+  List<AppNameModel> appNameList;
+
+  AppNameCubit() : super(AppNameInitial()) {
+    _service = AppNameService();
+  }
+
+  bool get loading => _loading;
+  void _isLoading(){
+    _loading = ! _loading;
+  }
+
+  Future<void> fetch() async {
+    try {
+      emit(AppNameProcessState());
+      _isLoading();
+      appNameList = await _service.fetch();
+      emit(AppNameSuccessState(
+        successMessage: "Dados carregados com sucesso."),
+      );
+    } catch (e) {
+      emit(AppNameErrorState(e.toString()));
+    } finally {
+      _isLoading();
+    }
+  }
+
+  Future<void> reload() async {
+    try {
+      emit(AppNameProcessState());
+      _isLoading();
+      emit(AppNameSuccessState(
+        successMessage: "Dados carregados com sucesso."),
+      );
+    } catch (e) {
+      emit(AppNameErrorState(e.toString()));
+    } finally {
+      _isLoading();
+    }
+  }
+
+  Future<void> post(AppNameModel AppName) async {
+    try {
+      emit(AppNameProcessState());
+      _isLoading();
+      emit(AppNameSuccessState(
+        successMessage: "Dados salvos com sucesso."),
+      );
+    } catch (e) {
+      emit(AppNameErrorState(e.toString()));
+    } finally {
+      _isLoading();
+    }
+  }
+
+  Future<void> put(AppNameModel AppName) async {
+    try {
+      emit(AppNameProcessState());
+      _isLoading();
+      emit(AppNameSuccessState(
+        successMessage: "Dado atualizado com sucesso."),
+      );
+    } catch (e) {
+      emit(AppNameErrorState(e.toString()));
+    } finally {
+      _isLoading();
+    }
+  }
+
+  Future<void> patch(AppNameModel AppName) async {
+    try {
+      emit(AppNameProcessState());
+      _isLoading();
+      emit(AppNameSuccessState(
+        successMessage: "Dado atualizado com sucesso."),
+      );
+    } catch (e) {
+      emit(AppNameErrorState(e.toString()));
+    } finally {
+      _isLoading();
+    }
+  }
+
+  Future<void> delete(AppNameModel AppName) async {
+    try {
+      emit(AppNameProcessState());
+      _isLoading();
+      emit(AppNameSuccessState(
+        successMessage: "Dado deletado com sucesso."),
+      );
+    } catch (e) {
+      emit(AppNameErrorState(e.toString()));
+    } finally {
+      _isLoading();
+    }
+  }
+}

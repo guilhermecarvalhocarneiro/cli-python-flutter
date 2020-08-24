@@ -7,28 +7,24 @@
 
 import 'dart:convert';
 
-class AppNameModel{  
+class AppNameModel {
   int id;
   String nextUrl;
   String previousUrl;
-  
-  AppNameModel({
-    this.id,
-    this.nextUrl, 
-    this.previousUrl,
-  });
 
-  factory AppNameModel.fromJson(String str) => AppNameModel.fromMap(json.decode(str));
+  AppNameModel({this.id, this.nextUrl, this.previousUrl});
 
-  String toJson() => json.encode(toMap());
+  AppNameModel.fromMap(Map<String, dynamic> json) {
+    id = json['id'];
+    nextUrl = json['nextUrl'];
+    previousUrl = json['previousUrl'];
+  }
 
-  factory AppNameModel.fromMap(Map<String, dynamic> json) => AppNameModel(
-      nextUrl: json["nextUrl"] == null ? null : json["nextUrl"],
-      previousUrl: json["previousUrl"] == null ? null : json["previousUrl"],
-  );
-
-  Map<String, dynamic> toMap() => {
-      "nextUrl": nextUrl == null ? null : nextUrl,
-      "previousUrl": previousUrl == null ? null : previousUrl,
-  };
+  Map<String, dynamic> toMap() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['nextUrl'] = this.nextUrl;
+    data['previousUrl'] = this.previousUrl;
+    return data;
+  }
 }
