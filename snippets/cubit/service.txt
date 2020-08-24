@@ -31,9 +31,9 @@ class AppNameService {
     if (appName != null) _appName = appName;
   }
 
-  Future<List<AppNameModel>> fetchAll() async {
+  Future<List<AppNameModel>> fetchAll({String url}) async {
     try {
-      String _url;
+      String _url = url != null? url: _uri;
       _appNameList?.clear();
       final CustomDio _dio = CustomDio(_uri);
       _dio.makeHeadersAuthentication();
@@ -53,7 +53,6 @@ class AppNameService {
           appNameModel.previousUrl = _previous;
           _appNameList.add(appNameModel);
         }
-        _success("ok");
       }
     } catch (error, exception) {
       _error(error, exception.toString());
@@ -63,7 +62,6 @@ class AppNameService {
 
   Future<List<AppNameModel>> getMore(String uri) async {
     List<AppNameModel> _appNameList = List<AppNameModel>();
-    String _url;
     try {
       final CustomDio _dio = CustomDio(uri);
       _dio.makeHeadersAuthentication();
@@ -83,7 +81,6 @@ class AppNameService {
           appNameModel.previousUrl = _previous;
           _appNameList.add(appNameModel);
         }
-        _success("ok");
       }
     } catch (error, exception) {
       _error(error, exception.toString());
@@ -92,7 +89,7 @@ class AppNameService {
   }
 
   Future<AppNameModel> detail(AppNameModel appName) async {
-    String _url = "";
+    _uri += "${appName.id}/";
     try {
       final CustomDio _dio = CustomDio(_uri);
       final data = await _dio.getHttp();
@@ -107,14 +104,12 @@ class AppNameService {
 
   Future<AppNameModel> post(AppNameModel appName) async {
     try {
-      String _url = "";
       final CustomDio _dio = CustomDio(_uri);
       _dio.makeHeadersAuthentication();
       final data = FormData.fromMap(appName.toMap());
       final dataResponse = await _dio.postHttp(data);
       if (dataResponse != null) {
         appName = AppNameModel.fromMap(dataResponse);
-        _success("ok");
       }
     } catch (error, exception) {
       _error(error, exception.toString());
@@ -123,15 +118,14 @@ class AppNameService {
   }
 
   Future<AppNameModel> put(AppNameModel appName) async {
+    _uri += "${appName.id}/";
     try {
-      String _url = "";
       final CustomDio _dio = CustomDio(_uri);
       _dio.makeHeadersAuthentication();
-      final FormData data = FormData.fromMap({appName.toMap()});
-      final dataResponse = await _dio.putHttp(data);
+      final FormData data = FormData.fromMap(appName.toMap());
+      final dataResponse = await _dio.putHttp(data, appName.id.toString());
       if (dataResponse != null) {
         return AppNameModel.fromMap(dataResponse);
-        _success("ok");
       }
     } catch (error, exception) {
       _error(error, exception.toString());
@@ -140,15 +134,14 @@ class AppNameService {
   }
 
   Future<AppNameModel> patch(AppNameModel appName) async {
+    _uri += "${appName.id}/";
     try {
-      String _url = "";
       final CustomDio _dio = CustomDio(_uri);
       _dio.makeHeadersAuthentication();
-      final FormData data = FormData.fromMap({});
+      final FormData data = FormData.fromMap(appName.toMap());
       final dataResponse = await _dio.patchHttp(data);
       if (dataResponse != null) {
         return AppNameModel.fromMap(dataResponse);
-        _success("ok");
       }
     } catch (error, exception) {
       _error(error, exception.toString());
@@ -157,15 +150,14 @@ class AppNameService {
   }
 
   Future<bool> delete(AppNameModel appName) async {
+    _uri += "${appName.id}/";
     try {
-      String _url = "";
       final CustomDio _dio = CustomDio(_uri);
       _dio.makeHeadersAuthentication();
       final data = appName.toMap();
-      final dataResponse = await _dio.deleteHttp(data);
+      final dataResponse = await _dio.deleteHttp(data, appName.id.toString());
       if (dataResponse != null) {
         return true;
-        _success("ok");
       }
       return false;
     } catch (error, exception) {
@@ -176,7 +168,7 @@ class AppNameService {
 
   void _success(String message, {int statusCode}) async {
     try {
-      Process.finishSuccess(message, status: statusCode);
+      debugPrint("Mensagem: $message, Status: $statusCode");
     } catch (e) {
       debugPrint("Ocorreu um erro no método error: $e");
     }
@@ -184,9 +176,7 @@ class AppNameService {
 
   void _error(String error, String exception, {int statusCode}) async {
     try {
-      if (Process.isDioError == false) {
-        Process.finishError(error, exception, status: statusCode);
-      }
+      debugPrint("Error: $error, Exception: $exception");
     } catch (e) {
       debugPrint("Ocorreu um erro no método error: $e");
     }
