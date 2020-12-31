@@ -119,7 +119,24 @@ class AppNameService {
       CustomDio _dio = CustomDio(_uri);
       _dio.makeHeadersAuthentication();
       FormData data = FormData.fromMap({});
-      var dataResponse = await _dio.patchHttp(data);
+      var dataResponse = await _dio.putHttp(data);
+      if (dataResponse != null) {
+        _success("ok");
+        return AppNameModel.fromMap(dataResponse);
+      }
+    } catch (error, exception) {
+      _error(error, exception.toString());
+    }
+    return null;
+  }
+
+  Future<AppNameModel> patch(AppNameModel appName) async {
+    try {
+      String _url = "";
+      final CustomDio _dio = CustomDio(_uri);
+      _dio.makeHeadersAuthentication();
+      final FormData data = FormData.fromMap({});
+      final dataResponse = await _dio.patchHttp(data);
       if (dataResponse != null) {
         _success("ok");
         return AppNameModel.fromMap(dataResponse);

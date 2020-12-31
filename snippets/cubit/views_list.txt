@@ -11,11 +11,11 @@ import 'detail.dart';
 import 'create.dart';
 import '../model.dart';
 import '../cubit.dart';
-import '../../../utils/util.dart';
-import '../../../utils/config.dart';
-import '../../../utils/localization.dart';
-import '../../../user_interface/font.dart';
-import '../../../user_interface/widget.dart';
+import '../../../../utils/util.dart';
+import '../../../../utils/config.dart';
+import '../../../../utils/localization.dart';
+import '../../../../user_interface/font.dart';
+import '../../../../user_interface/widget.dart';
 
 class AppNameListPage extends StatefulWidget {
   @override
@@ -32,7 +32,9 @@ class AppNameListPageState extends State<AppNameListPage>
   void initState() {
     super.initState();
     _animationController = AnimationController(vsync: this);
-    _loadData();
+    SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+      _loadData();
+    });
   }
 
   @override
@@ -54,7 +56,7 @@ class AppNameListPageState extends State<AppNameListPage>
     );
   }
 
-    Widget _buildBody() {
+  Widget _buildBody() {
     return Stack(
       children: <Widget>[
         HeadWidget(),
@@ -81,58 +83,70 @@ class AppNameListPageState extends State<AppNameListPage>
     );
   }
 
-  _listBuilder() {
+  /// Método responsável por criar o GridView com os 
+  /// dados retornados da API
+  Widget _listBuilder() {
     return BlocConsumer<AppNameCubit, AppNameState>(
       listener: (context, state) {
         if (state is AppNameErrorState){
           _showMessage(state.error, error: true);
+          debugPrint("DebugError: No método _listBuilder do AppNameListPage  -> ${state.error}");
         }
         if(state is AppNameSuccessState){
           _showMessage(state.successMessage);
+          debugPrint("DebugSuccess: No método _listBuilder do AppNameListPage -> ${state.successMessage}");
         }
       },
       builder: (context, state) {
-        final _appNameCubit = context.bloc<AppNameCubit>();
         if (state is AppNameProcessState) {
           return customProcessingCardModalCenter(context);
         }
-        return _appNameCubit.appNameList == null 
-           ? Container() 
-           : Expanded(
-            child: Container(
-             margin: EdgeInsets.only(
-               top: Util.getProportionScreenHeight(
-                    context, Config.marginHead),
-             ),
-             child: ListView.builder(
-              itemCount: _appNameCubit.appNameList.length,
-              itemBuilder: (context, index) {
-                AppNameModel _appName = _appNameCubit.appNameList[index];
-                return GestureDetector(
-                  onTap: () {
-                    _appNameCubit.appNameModel = _appName;
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => AppNameDetailPage(),
-                      ),
-                    );
-                  },
-                  child: customCard(
-                    context: context,
-                    child: Text(_appName.toString()),
-                  ),
-                );
-              },
-            )
-          )
-        );
+        if (state is AppNameSuccessState){
+            if(state.appNameList  == null) {
+              return Container(
+                child: Center(
+                  child: Text("Nenhum Item Retornado"),
+                ),
+              );
+            }
+            if (state.appNameList.length > 0){
+              return Container(
+                margin: EdgeInsets.only(top: Util.getHeightSystemBar(context)),
+                height: Util.getProportionScreenHeight(context, 0.8),
+                child: GridView.count(
+                  crossAxisCount: 2,
+                  childAspectRatio: MediaQuery.of(context).size.height / 380,
+                  crossAxisSpacing: 2.0,
+                  mainAxisSpacing: 4.0,
+                  physics: ScrollPhysics(),
+                  shrinkWrap: true,
+                  children:
+                    List.generate(state.appNameList.length, (index) {
+                      return Card(
+                        child: Container(
+                          child: Center(
+                            child: Text(state.appNameList[index].toString()),
+                          ),
+                        ),
+                      );
+                    }),
+                ),
+              );
+            }
+            return Container(
+                child: Center(
+                    child: Text("Nenhum Item Retornado"),
+                ),
+            );
+        }
+        return Container();
       },
     );
   }
 
-
-  Future _refresh() async {
+  /// Método para recarregar os dados da API, quando o usuário
+  /// realizar o movimento de puxar a tela para baixa e soltar
+  Future<void> _refresh() async {
     try {
     // TODO implementar o método de refresh da tela
     } catch (error) {
@@ -140,7 +154,9 @@ class AppNameListPageState extends State<AppNameListPage>
     }
   }
 
-  _showMessage(String message, {bool error}) {
+  /// Método responsável por mostrar um SnackBar com uma mensagem 
+  /// com o texto passada como parâmetro
+  void _showMessage(String message, {bool error}) {
     setState(() {
       _scaffoldKey.currentState.showSnackBar(
         SnackBar(
@@ -151,7 +167,8 @@ class AppNameListPageState extends State<AppNameListPage>
     });
   }
 
-  _makeToast(String texto, {erro = false, altura = 80.0}) async {
+  /// Método responsável por mostrar um modal com o texto informado
+  void _makeToast(String texto) async {
     return showDialog(
       context: context,
       builder: (context) {
@@ -173,8 +190,9 @@ class AppNameListPageState extends State<AppNameListPage>
     );
   }
 
+  /// Método responsável por carregar os dados da API
   Future<void> _loadData() async {
-    final _appNameCubit = context.bloc<AppNameCubit>();
+    final _appNameCubit = context.read<AppNameCubit>();
     await _appNameCubit.fetch();
   }
 }

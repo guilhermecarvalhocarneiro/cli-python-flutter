@@ -10,7 +10,7 @@
 
 import 'package:flutter/material.dart';
 
-import '../../../user_interface/widget.dart';
+import '../../../../user_interface/widget.dart';
 import '../cubit.dart';
 import '../model.dart';
 
@@ -63,7 +63,7 @@ class _AppNameIndexPageState extends State<AppNameIndexPage>
     });
   }
 
-  _makeToast(String texto, {erro = false, altura = 80.0}) async {
+  _makeToast(String texto) async {
     return showDialog(
       context: context,
       builder: (context) {

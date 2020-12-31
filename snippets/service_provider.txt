@@ -127,7 +127,7 @@ class AppNameService {
       String _url = "";
       final CustomDio _dio = CustomDio(_uri);
       _dio.makeHeadersAuthentication();
-      final FormData data = FormData.fromMap({appName.toMap()});
+      final FormData data = FormData.fromMap(appName.toMap());
       final dataResponse = await _dio.putHttp(data);
       if (dataResponse != null) {
         return AppNameModel.fromMap(dataResponse);

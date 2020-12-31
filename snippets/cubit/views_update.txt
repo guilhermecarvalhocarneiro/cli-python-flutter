@@ -6,11 +6,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../user_interface/font.dart';
-import '../../../user_interface/widget.dart';
-import '../../../utils/localization.dart';
-import '../../../utils/config.dart';
-import '../../../utils/util.dart';
+import '../../../../user_interface/font.dart';
+import '../../../../user_interface/widget.dart';
+import '../../../../utils/localization.dart';
+import '../../../../utils/config.dart';
+import '../../../../utils/util.dart';
 import '../model.dart';
 import '../cubit.dart';
 
@@ -26,6 +26,8 @@ class _AppNameAddPageState extends State<AppNameUpdatePage>
 
   AnimationController _animationController;
   AppNameModel _appName = AppNameModel();
+
+  $Attributes$
 
   @override
   void initState() {
@@ -53,10 +55,17 @@ class _AppNameAddPageState extends State<AppNameUpdatePage>
     Widget _buildBody() {
     return BlocConsumer<AppNameCubit, AppNameState>(
       listener: (context, state) {
+        if (state is AppNameErrorState){
+          _showMessage(state.error, error: true);
+          debugPrint("DebugError: No método _buildBody do _buildBody  -> ${state.error}");
+        }
+        if(state is AppNameSuccessState){
+          _showMessage(state.successMessage);
+          debugPrint("DebugSuccess: No método _buildBody do _buildBody -> ${state.successMessage}");
+        }        
       },
       builder: (context, state) {
         _appName = context.bloc<AppNameCubit>().appNameModel;
-        
         return Stack(
           children: <Widget>[
             HeadWidget(),
@@ -113,32 +122,43 @@ class _AppNameAddPageState extends State<AppNameUpdatePage>
         mainAxisSize: MainAxisSize.max,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
+          // TODO Implementar os campos do formulário
         ],
       ),
     );
   }
   
   Widget _createButton(context){
-    return  Padding(
-      padding: const EdgeInsets.only(top: 24.0),
-      child: Container(
-          width: MediaQuery.of(context).size.width,
-          child: customRaisedButton(
-            label: 'Salvar',
-            context: context,
-            onPress: () {
-              if (_formAppName.currentState.validate()) {
-                setState(() {
-                  _put();
-                });
-              }
-            },
+    return BlocConsumer<AppNameCubit, AppNameState>(
+      listener: (context, state) {},
+      builder: (context, state) {
+        if (state is AppNameProcessState) {
+          return customProcessingWidget(context, isCircularIndicator: false);
+        }
+      return  Padding(
+        padding: const EdgeInsets.only(top: 24.0),
+        child: Container(
+            width: MediaQuery.of(context).size.width,
+            child: customRaisedButton(
+              label: 'Salvar',
+              context: context,
+              onPress: () {
+                if (_formAppName.currentState.validate()) {
+                  setState(() {
+                    $AttributesData$
+                    _put();
+                  });
+                }
+              },
+            ),
           ),
-        ),
+        );
+      },
     );
   }
   
   void _clearForm(){
+    // TOdo Implementar o método de limpeza dos campos do formulário
   }
 
   void _put() async {
@@ -146,7 +166,7 @@ class _AppNameAddPageState extends State<AppNameUpdatePage>
     try{
       _appNameCubit.put(_appName);
     }catch (e){
-
+      debugPrint("DebugError: No método _put do AppNameUpdatePage -> $e");
     }
   }
 
@@ -164,7 +184,7 @@ class _AppNameAddPageState extends State<AppNameUpdatePage>
     FocusScope.of(context).requestFocus(FocusNode());
   }
 
-  _makeToast(String texto, {erro = false, altura = 80.0}) async {
+  _makeToast(String texto) async {
     return showDialog(
       context: context,
       builder: (context) {

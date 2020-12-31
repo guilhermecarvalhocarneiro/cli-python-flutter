@@ -17,12 +17,19 @@ import '../cubit.dart';
 import 'update.dart';
 
 class AppNameDetailPage extends StatefulWidget {
+  final AppNameModel appNameModel;
+
+  const AppNameDetailPage({Key key, this.appNameModel})
+      : super(key: key);
+
   @override
   _AppNameDetailPageState createState() => _AppNameDetailPageState();
 }
 
 class _AppNameDetailPageState extends State<AppNameDetailPage> 
   with SingleTickerProviderStateMixin{
+
+  AppNameModel _appNameModel;
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   AnimationController _animationController;
 
@@ -31,13 +38,23 @@ class _AppNameDetailPageState extends State<AppNameDetailPage>
   @override
   void initState() {
     super.initState();
+    this._appNameModel = widget.appNameModel;
     _animationController = AnimationController(vsync: this);
   }
 
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<AppNameCubit, AppNameState>(
-      listener: (context, state) {},
+      listener: (context, state) {
+        if (state is AppNameErrorState){
+          _showMessage(state.error, error: true);
+          debugPrint("DebugError: No método build do AppNameDetailPage  -> ${state.error}");
+        }
+        if(state is AppNameSuccessState){
+          _showMessage(state.successMessage);
+          debugPrint("DebugSuccess: No método build do AppNameDetailPage -> ${state.successMessage}");
+        }
+      },
       builder: (context, state) {
         _appName = context.bloc<AppNameCubit>().appNameModel;
         return Scaffold(

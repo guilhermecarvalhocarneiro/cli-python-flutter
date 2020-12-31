@@ -16,8 +16,12 @@ class AppNameProcessState extends AppNameState {
 
 class AppNameSuccessState extends AppNameState {
   final String successMessage;
+  final AppNameModel appNameModel;
+  final List<AppNameModel> appNameList;
   AppNameSuccessState({
     this.successMessage,
+    this.appNameModel,
+    this.appNameList,
   });
 
   @override
