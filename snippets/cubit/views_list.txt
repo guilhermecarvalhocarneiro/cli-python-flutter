@@ -11,11 +11,11 @@ import 'detail.dart';
 import 'create.dart';
 import '../model.dart';
 import '../cubit.dart';
-import '../../../../utils/util.dart';
-import '../../../../utils/config.dart';
-import '../../../../utils/localization.dart';
-import '../../../../user_interface/font.dart';
-import '../../../../user_interface/widget.dart';
+import '../../../utils/util.dart';
+import '../../../utils/config.dart';
+import '../../../utils/localization.dart';
+import '../../../user_interface/font.dart';
+import '../../../user_interface/widget.dart';
 
 class AppNameListPage extends StatefulWidget {
   @override

@@ -6,9 +6,10 @@
 /// FileLocked
 
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 
 class AppNameModel {
-  string id;
+  String id;
   String nextUrl;
   String previousUrl;
 

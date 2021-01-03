@@ -6,11 +6,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../user_interface/font.dart';
-import '../../../../user_interface/widget.dart';
-import '../../../../utils/localization.dart';
-import '../../../../utils/config.dart';
-import '../../../../utils/util.dart';
+import '../../../user_interface/font.dart';
+import '../../../user_interface/widget.dart';
+import '../../../utils/localization.dart';
+import '../../../utils/config.dart';
+import '../../../utils/util.dart';
 import '../model.dart';
 import '../cubit.dart';
 
@@ -26,8 +26,6 @@ class _AppNameAddPageState extends State<AppNameUpdatePage>
 
   AnimationController _animationController;
   AppNameModel _appName = AppNameModel();
-
-  $Attributes$
 
   @override
   void initState() {
@@ -145,7 +143,6 @@ class _AppNameAddPageState extends State<AppNameUpdatePage>
               onPress: () {
                 if (_formAppName.currentState.validate()) {
                   setState(() {
-                    $AttributesData$
                     _put();
                   });
                 }

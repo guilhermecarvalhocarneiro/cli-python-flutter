@@ -18,7 +18,7 @@ def parser(app_name, state_manager, replace):
 
     Args:
         app_name (String): Nome da App no formato NomeApp
-        state_manager (String): Tipo do gerenciador de estado a ser utilizado, provider ou mobx
+        state_manager (String): Tipo do gerenciador de estado a ser utilizado, provider ou mobx cubit
     """
     try:
         Parser(app_name, state_manager, replace).parse()
