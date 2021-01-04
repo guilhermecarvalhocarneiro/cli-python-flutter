@@ -81,7 +81,7 @@ class AppNameCubit extends Cubit<AppNameState> {
   Future<void> put(AppNameModel appName) async {
     try {
       emit(AppNameProcessState());
-      appNameModel = await _service.post(appName);
+      appNameModel = await _service.put(appName);
       emit(AppNameSuccessState(
         successMessage: "Dado atualizado com sucesso."),
       );
