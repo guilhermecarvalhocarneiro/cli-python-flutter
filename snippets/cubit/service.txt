@@ -16,6 +16,7 @@
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'dart:convert';
 
 import 'model.dart';
 import '../../utils/config.dart';
@@ -59,8 +60,8 @@ class AppNameService {
       if (dataResponse != null) {
         final String _next = dataResponse.containsKey('nextUrl') ? dataResponse["next"] : "";
         final String _previous = dataResponse.containsKey('previousUrl') ?dataResponse["previous"]: "";
-        final _dataItens = dataResponse.containsKey('results')? dataResponse["results"]: dataResponse;
-        for (var data in _dataItens) {
+        final _dataItems = dataResponse.containsKey('results')? dataResponse["results"]: dataResponse;
+        for (var data in _dataItems) {
           AppNameModel _appName = AppNameModel.fromMap(data);
           _appName.nextUrl = _next;
           _appName.previousUrl = _previous;
@@ -91,7 +92,7 @@ class AppNameService {
   Future<AppNameModel> post(AppNameModel appName) async {
     try {
       final CustomDio _dio = CustomDio(_uri);
-      final _data = appName.toMap();
+      final _data = json.encode(appName.toMap());
       final data = await _dio.postHttp(_data);
       if (data != null) {
         _appName = AppNameModel.fromMap(data);
@@ -106,7 +107,7 @@ class AppNameService {
     _uri += "${appName.id}/";
     try {
       final CustomDio _dio = CustomDio(_uri);
-      final _data = appName.toMap();
+      final _data = json.encode(appName.toMap());
       final data = await _dio.putHttp(_data, appName.id.toString());
       if (data != null) {
         _appName = AppNameModel.fromMap(data);
@@ -121,7 +122,7 @@ class AppNameService {
     _uri += "${appName.id}/";
     try {
       final CustomDio _dio = CustomDio(_uri);    
-      final _data = appName.toMap();
+      final _data = json.encode(appName.toMap());
       final data = await _dio.patchHttp(_data);
       if (data != null) {
         _appName = AppNameModel.fromMap(data);
@@ -136,7 +137,7 @@ class AppNameService {
     _uri += "${appName.id}/";
     try {
       final CustomDio _dio = CustomDio(_uri);    
-      final _data = appName.toMap();
+      final _data = json.encode(appName.toMap());
       final data = await _dio.deleteHttp(_data, appName.id.toString());
       if (data != null) {
         return true;
