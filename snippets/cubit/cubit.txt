@@ -55,7 +55,6 @@ class AppNameCubit extends Cubit<AppNameState> {
   }
 
   Future<void> reload() async {
-    // TODO Implementar consulta ao servico e tratamento do retorno
     try {
       emit(AppNameProcessState());
       emit(AppNameSuccessState(
@@ -91,9 +90,9 @@ class AppNameCubit extends Cubit<AppNameState> {
   }
 
   Future<void> patch(AppNameModel appName) async {
-    // TODO Implementar consulta ao servico e tratamento do retorno
     try {
       emit(AppNameProcessState());
+      appNameModel = await _service.patch(appName);
       emit(AppNameSuccessState(
         successMessage: "Dado atualizado com sucesso."),
       );
@@ -103,9 +102,9 @@ class AppNameCubit extends Cubit<AppNameState> {
   }
 
   Future<void> delete(AppNameModel appName) async {
-    // TODO Implementar consulta ao servico e tratamento do retorno
     try {
       emit(AppNameProcessState());
+      await _service.delete(appName);
       emit(AppNameSuccessState(
         successMessage: "Dado deletado com sucesso."),
       );

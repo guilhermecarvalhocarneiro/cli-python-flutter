@@ -110,18 +110,22 @@ class _AppNameDetailPageState extends State<AppNameDetailPage>
     );
   }
 
-  _showMessage(String message, {bool error}) {
-    setState(() {
-      _scaffoldKey.currentState.showSnackBar(
-        SnackBar(
-          content: Text(message),
-          backgroundColor: error == true ? Colors.red : Colors.blue,
-        ),
-      );
-    });
+  /// Método responsável por mostrar um SnackBar com uma mensagem
+  /// com o texto passada como parâmetro
+   _showMessage(String message, {bool error = false}) {
+    if (message != null && message.isNotEmpty) {
+      setState(() {
+        _scaffoldKey.currentState.showSnackBar(
+          error == false
+              ? customSuccessSnackbar(message)
+              : customErrorSnackbar(message),
+        );
+      });
+    }
   }
 
-  _makeToast(String texto, {erro = false, altura = 80.0}) async {
+  /// Método responsável por mostrar um modal com o texto informado
+  void _makeToast(String texto) async {
     return showDialog(
       context: context,
       builder: (context) {
@@ -141,5 +145,10 @@ class _AppNameDetailPageState extends State<AppNameDetailPage>
         );
       },
     );
+  }
+
+  /// Método para ocultar o teclado
+  _hideKeyboard(BuildContext context){
+    FocusScope.of(context).requestFocus(FocusNode());
   }
 }

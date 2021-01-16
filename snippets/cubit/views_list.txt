@@ -148,23 +148,23 @@ class AppNameListPageState extends State<AppNameListPage>
   /// realizar o movimento de puxar a tela para baixa e soltar
   Future<void> _refresh() async {
     try {
-    // TODO implementar o método de refresh da tela
     } catch (error) {
 
     }
   }
 
-  /// Método responsável por mostrar um SnackBar com uma mensagem 
+  /// Método responsável por mostrar um SnackBar com uma mensagem
   /// com o texto passada como parâmetro
-  void _showMessage(String message, {bool error}) {
-    setState(() {
-      _scaffoldKey.currentState.showSnackBar(
-        SnackBar(
-          content: Text(message),
-          backgroundColor: error == true ? Colors.red : Colors.blue,
-        ),
-      );
-    });
+   _showMessage(String message, {bool error = false}) {
+    if (message != null && message.isNotEmpty) {
+      setState(() {
+        _scaffoldKey.currentState.showSnackBar(
+          error == false
+              ? customSuccessSnackbar(message)
+              : customErrorSnackbar(message),
+        );
+      });
+    }
   }
 
   /// Método responsável por mostrar um modal com o texto informado
@@ -188,6 +188,11 @@ class AppNameListPageState extends State<AppNameListPage>
         );
       },
     );
+  }
+
+  /// Método para ocultar o teclado
+  _hideKeyboard(BuildContext context){
+    FocusScope.of(context).requestFocus(FocusNode());
   }
 
   /// Método responsável por carregar os dados da API
