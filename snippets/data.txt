@@ -44,6 +44,7 @@ class AppNameData {
       var _data = await _store.find(_db);
       return _data.map((snapshot){
         final _result = AppNameModel.fromMap(snapshot.value);
+        return _result;
       }).toList();
     } catch (e) {
       return null;
