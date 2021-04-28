@@ -11,7 +11,7 @@ def flutter():
 
 @flutter.command()
 @click.argument('app_name', type=click.STRING)
-@click.argument('state_manager', type=click.STRING)
+@click.argument('state_manager', type=click.STRING, default='cubit')
 @click.argument('replace', type=click.BOOL, default=False)
 def parser(app_name, state_manager, replace):
     """Método para gerar a app flutter

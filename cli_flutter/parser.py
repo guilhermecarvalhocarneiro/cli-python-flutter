@@ -15,10 +15,7 @@ class Parser:
     def __init__(self, app_name, state_manager, replace):
         if app_name == None:
             sys.exit()
-        if (state_manager == None or state_manager.lower() not in ['provider', 'mobx', 'cubit']):
-            print("É obrigatório informar o gerenciado de estado, provider, mobx ou cubit")
-            sys.exit()
-        self.state_manager = state_manager
+        self.state_manager = 'cubit'
         self.replace = replace
 
         self.app_name = app_name
