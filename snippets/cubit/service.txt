@@ -11,7 +11,7 @@
 
 /// [Travar o arquivo]
 /// Caso deseje "travar" o arquivo para não ser parseado novamente
-/// pelo manage do Django adicione um # antes da palavra abaixo
+/// pelo manage do Django remova o # antes da palavra abaixo
 /// FileLocked
 
 import 'package:dio/dio.dart';
@@ -26,7 +26,7 @@ import '../../utils/util.dart';
 class AppNameService {
   String _uri = "";
   AppNameModel _appName = AppNameModel();
-  List<AppNameModel> _appNameList = List<AppNameModel>();
+  List<AppNameModel> _appNameList = [];
 
   AppNameService({AppNameModel appName, List<AppNameModel> appNameList}) {
     if (appName != null) _appName = appName;
@@ -39,10 +39,13 @@ class AppNameService {
       final CustomDio _dio = CustomDio(_url);
       final dataResponse = await _dio.getHttp();
       if (dataResponse != null) {
-        for (var data in dataResponse) {
+        final String _next = dataResponse["next"];
+        final String _previous = dataResponse["previous"];
+        final _dataItems = dataResponse["results"];
+        for (var data in _dataItems) {
           AppNameModel _appName = AppNameModel.fromMap(data);
-          // _appName.nextUrl = _next;
-          // _appName.previousUrl = _previous;
+          _appName.nextUrl = _next;
+          _appName.previousUrl = _previous;
           _appNameList.add(_appName);
         }
         _success("ok");
@@ -58,9 +61,9 @@ class AppNameService {
       final CustomDio _dio = CustomDio(uri);
       final dataResponse = await _dio.getHttp();
       if (dataResponse != null) {
-        final String _next = dataResponse.containsKey('nextUrl') ? dataResponse["next"] : "";
-        final String _previous = dataResponse.containsKey('previousUrl') ?dataResponse["previous"]: "";
-        final _dataItems = dataResponse.containsKey('results')? dataResponse["results"]: dataResponse;
+        final String _next = dataResponse["next"];
+        final String _previous = dataResponse["previous"];
+        final _dataItems = dataResponse["results"];
         for (var data in _dataItems) {
           AppNameModel _appName = AppNameModel.fromMap(data);
           _appName.nextUrl = _next;
@@ -151,7 +154,7 @@ class AppNameService {
 
   void _success(String message, {int statusCode}) async {
     try {
-      debugPrint("DebugSuccess: $message, Status: $statusCode");
+      DebugPrint.print("DebugSuccess: $message, Status: $statusCode");
     } catch (e) {
       _error("$e", "");
     }
@@ -159,10 +162,10 @@ class AppNameService {
 
   void _error(String error, String exception, {int statusCode}) async {
     try {
-      debugPrint(
+      DebugPrint.error(
           "DebugErro: AppNameService -> $error | $exception");
     } catch (error) {
-      debugPrint(
+      DebugPrint.error(
           "DebugErro: AppNameService ->$error");
     }
   }

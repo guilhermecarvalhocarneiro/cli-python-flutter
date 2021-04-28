@@ -7,6 +7,7 @@
 
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
+import '../../utils/exception.dart';
 
 class AppNameModel {
   String id;
@@ -21,7 +22,7 @@ class AppNameModel {
       nextUrl = json['nextUrl'];
       previousUrl = json['previousUrl'];
     } catch (error){
-      debugPrint("DebugError: No método fromMap do AppNameModel  -> $error");
+      ExceptionCustom.general("Ocorreu um erro no método fromMap do AppNameModel", error.toString());
     }
   }
 
@@ -32,7 +33,7 @@ class AppNameModel {
       data['nextUrl'] = this.nextUrl;
       data['previousUrl'] = this.previousUrl;
     }catch(error){
-      debugPrint("DebugError: No método toMap do AppNameModel  -> $error");
+      ExceptionCustom.general("Ocorreu um erro no método toMap do AppNameModel", error.toString());      
     }
     return data;
   }

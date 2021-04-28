@@ -2,7 +2,7 @@
 
 /// [Travar o arquivo]
 /// Caso deseje "travar" o arquivo para não ser parseado novamente
-/// pelo manage do Django adicione um # antes da palavra abaixo
+/// pelo manage do Django remova o # antes da palavra abaixo
 /// FileLocked
 
 import 'package:path/path.dart';
@@ -14,6 +14,7 @@ import 'package:flutter/foundation.dart';
 
 import 'model.dart';
 import '../../utils/config.dart';
+import '../../utils/exception.dart';
 
 class AppNameData {
   AppNameModel _appNameModel = AppNameModel();
@@ -31,22 +32,27 @@ class AppNameData {
       var dbPath = join(dir.path, 'DbName.db');
       return await smbt_io.databaseFactoryIo.openDatabase(dbPath);
     } catch (error, exception) {
-      debugPrint(
-          "Erro no método initDB -> error: $error, message: $exception");
+      ExceptionCustom.data(
+        "Ocorreu no método initDb do AppNameData",
+        "Error: ${error.toString()}\nException: ${exception.toString()}",
+      );      
     }
     return null;
   }
 
-  Future<List<AppNameModel>> fetch() async {
+  Future<List<AppNameModel>> fetchAll() async {
     try {
       _db = await initDb();
       var _store = smbt.intMapStoreFactory.store(_storeName);
       var _data = await _store.find(_db);
-      return _data.map((snapshot){
-        final _result = AppNameModel.fromMap(snapshot.value);
-        return _result;
-      }).toList();
-    } catch (e) {
+      return _data
+          .map((snapshot) => AppNameModel.fromMap(snapshot.value))
+          .toList();
+    } catch (error, exception) {
+      ExceptionCustom.data(
+        "Ocorreu no método fetchAll do AppNameData",
+        "Error: ${error.toString()}\nException: ${exception.toString()}",
+      );      
       return null;
     } finally {
       _db.close();
@@ -59,7 +65,11 @@ class AppNameData {
       var _store = smbt.intMapStoreFactory.store(_storeName);
       var _data = await _store.findFirst(_db);
       return AppNameModel.fromMap(_data.value);
-    } catch (e) {
+    } catch (error, exception) {
+      ExceptionCustom.data(
+        "Ocorreu no método get do AppNameData",
+        "Error: ${error.toString()}\nException: ${exception.toString()}",
+      );      
       return null;
     } finally {
       _db.close();
@@ -73,6 +83,10 @@ class AppNameData {
       await _store.add(_db, appName.toMap());
       return true;
     } catch (error, exception) {
+      ExceptionCustom.data(
+        "Ocorreu no método save do AppNameData",
+        "Error: ${error.toString()}\nException: ${exception.toString()}",
+      );      
       return false;
     } finally {
       _db.close();
@@ -86,6 +100,10 @@ class AppNameData {
       await _store.delete(_db);
       return true;
     } catch (error, exception) {
+      ExceptionCustom.data(
+        "Ocorreu no método deleteAll do AppNameData",
+        "Error: ${error.toString()}\nException: ${exception.toString()}",
+      );      
       return false;
     } finally {
       _db.close();
@@ -99,6 +117,10 @@ class AppNameData {
       await _store.delete(_db);
       return true;
     } catch (error, exception) {
+      ExceptionCustom.data(
+        "Ocorreu no método delete do AppNameData",
+        "Error: ${error.toString()}\nException: ${exception.toString()}",
+      );
       return false;
     } finally {
       _db.close();
@@ -117,6 +139,10 @@ class AppNameData {
       );
       return true;
     } catch (error, exception) {
+      ExceptionCustom.data(
+        "Ocorreu no método update do AppNameData",
+        "Error: ${error.toString()}\nException: ${exception.toString()}",
+      );
       return false;
     } finally {
       _db.close();

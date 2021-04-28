@@ -18,11 +18,12 @@
 
 /// [Travar o arquivo]
 /// Caso deseje "travar" o arquivo para não ser parseado novamente
-/// pelo manage do Django adicione um # antes da palavra abaixo
+/// pelo manage do Django remova o # antes da palavra abaixo
 /// FileLocked
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import '../../utils/exception.dart';
 import 'model.dart';
 import 'service.dart';
 import 'data.dart';
@@ -42,14 +43,17 @@ class AppNameCubit extends Cubit<AppNameState> {
   Future<void> fetch() async {
     try {
       emit(AppNameProcessState());
+      appNameList?.clear();
       appNameList = await _service.fetch();
       emit(
         AppNameSuccessState(
             successMessage: "Dados carregados com sucesso.",
+            appNameModel: appNameModel,
             appNameList: appNameList,
         ),
       );
     } catch (e) {
+      ExceptionCustom.state("Ocorreu um erro ou executar o método fetch do AppNameCubit", e.toString());
       emit(AppNameErrorState(e.toString()));
     }
   }
@@ -57,10 +61,32 @@ class AppNameCubit extends Cubit<AppNameState> {
   Future<void> reload() async {
     try {
       emit(AppNameProcessState());
+      appNameList?.clear();
+      appNameList = await _service.fetch();
       emit(AppNameSuccessState(
-        successMessage: "Dados carregados com sucesso."),
+          successMessage: "Dados carregados com sucesso.",
+          appNameModel: appNameModel,
+          appNameList: appNameList,
+        ),
       );
     } catch (e) {
+      ExceptionCustom.state("Ocorreu um erro ou executar o método reload do AppNameCubit", e.toString());
+      emit(AppNameErrorState(e.toString()));
+    }
+  }
+
+  Future<void> getMore(String url) async {
+    try {
+      emit(AppNameProcessState());
+      final data = await _service.getMore(url);
+      emit(AppNameSuccessState(
+          successMessage: "Dados carregados com sucesso.",
+          appNameModel: appNameModel,
+          appNameList: appNameList,
+        ),
+      );
+    } catch (e) {
+      ExceptionCustom.state("Ocorreu um erro ou executar o método reload do AppNameCubit", e.toString());
       emit(AppNameErrorState(e.toString()));
     }
   }
@@ -70,9 +96,13 @@ class AppNameCubit extends Cubit<AppNameState> {
       emit(AppNameProcessState());
        appNameModel = await _service.post(appName);
       emit(AppNameSuccessState(
-        successMessage: "Dados salvos com sucesso."),
+        successMessage: "Dados salvos com sucesso.",
+        appNameModel: appNameModel,
+        appNameList: appNameList,
+        ),
       );
     } catch (e) {
+      ExceptionCustom.state("Ocorreu um erro ou executar o método post do AppNameCubit", e.toString());
       emit(AppNameErrorState(e.toString()));
     }
   }
@@ -82,9 +112,13 @@ class AppNameCubit extends Cubit<AppNameState> {
       emit(AppNameProcessState());
       appNameModel = await _service.put(appName);
       emit(AppNameSuccessState(
-        successMessage: "Dado atualizado com sucesso."),
+        successMessage: "Dado atualizado com sucesso.",
+        appNameModel: appNameModel,
+        appNameList: appNameList,
+        ),
       );
     } catch (e) {
+      ExceptionCustom.state("Ocorreu um erro ou executar o método put do AppNameCubit", e.toString());
       emit(AppNameErrorState(e.toString()));
     }
   }
@@ -94,9 +128,13 @@ class AppNameCubit extends Cubit<AppNameState> {
       emit(AppNameProcessState());
       appNameModel = await _service.patch(appName);
       emit(AppNameSuccessState(
-        successMessage: "Dado atualizado com sucesso."),
+        successMessage: "Dado atualizado com sucesso.", 
+        appNameModel: appNameModel,
+        appNameList: appNameList,
+        ),
       );
     } catch (e) {
+      ExceptionCustom.state("Ocorreu um erro ou executar o método patch do AppNameCubit", e.toString());
       emit(AppNameErrorState(e.toString()));
     }
   }
@@ -106,9 +144,13 @@ class AppNameCubit extends Cubit<AppNameState> {
       emit(AppNameProcessState());
       await _service.delete(appName);
       emit(AppNameSuccessState(
-        successMessage: "Dado deletado com sucesso."),
+        successMessage: "Dado deletado com sucesso.",
+        appNameModel: appNameModel,
+        appNameList: appNameList,
+        ),
       );
     } catch (e) {
+      ExceptionCustom.state("Ocorreu um erro ou executar o método delete do AppNameCubit", e.toString());
       emit(AppNameErrorState(e.toString()));
     }
   }

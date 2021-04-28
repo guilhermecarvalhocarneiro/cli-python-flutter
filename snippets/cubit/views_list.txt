@@ -1,11 +1,12 @@
 
 /// [Travar o arquivo]
 /// Caso deseje "travar" o arquivo para não ser parseado novamente
-/// pelo manage do Django adicione um # antes da palavra abaixo
+/// pelo manage do Django remova o # antes da palavra abaixo
 /// FileLocked
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter/scheduler.dart';
 
 import 'detail.dart';
 import 'create.dart';
@@ -18,6 +19,8 @@ import '../../../user_interface/font.dart';
 import '../../../user_interface/widget.dart';
 
 class AppNameListPage extends StatefulWidget {
+  static const routeName = "/appNameListPage";
+
   @override
   AppNameListPageState createState() => AppNameListPageState();
 }
@@ -26,7 +29,7 @@ class AppNameListPageState extends State<AppNameListPage>
   with SingleTickerProviderStateMixin {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   AnimationController _animationController;
-  List<AppNameModel> _appNameList = List<AppNameModel>();
+  List<AppNameModel> _appNameList = [];
 
   @override
   void initState() {
@@ -50,7 +53,7 @@ class AppNameListPageState extends State<AppNameListPage>
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () {
-          Navigator.push(context, MaterialPageRoute(builder: (_) => AppNameAddPage()));
+          Navigator.pushNamed(context, AppNameAddPage.routeName);
         },
       ),
     );
@@ -90,11 +93,11 @@ class AppNameListPageState extends State<AppNameListPage>
       listener: (context, state) {
         if (state is AppNameErrorState){
           _showMessage(state.error, error: true);
-          debugPrint("DebugError: No método _listBuilder do AppNameListPage  -> ${state.error}");
+          DebugPrint.error("DebugError: No método _listBuilder do AppNameListPage  -> ${state.error}");
         }
         if(state is AppNameSuccessState){
           _showMessage(state.successMessage);
-          debugPrint("DebugSuccess: No método _listBuilder do AppNameListPage -> ${state.successMessage}");
+          DebugPrint.print("DebugSuccess: No método _listBuilder do AppNameListPage -> ${state.successMessage}");
         }
       },
       builder: (context, state) {
@@ -122,13 +125,17 @@ class AppNameListPageState extends State<AppNameListPage>
                   shrinkWrap: true,
                   children:
                     List.generate(state.appNameList.length, (index) {
-                      return Card(
+                      return InkWell(
+                      onTap: () {
+                        Navigator.pushNamed(context, AppNameDetailPage.routeName, arguments: state.usuarioList[index]);
+                      },
+                      child: Card(
                         child: Container(
                           child: Center(
                             child: Text(state.appNameList[index].toString()),
                           ),
                         ),
-                      );
+                      ));
                     }),
                 ),
               );
