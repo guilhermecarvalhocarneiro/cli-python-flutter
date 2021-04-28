@@ -16,6 +16,8 @@ import '../model.dart';
 
 
 class AppNameAddPage extends StatefulWidget {
+  static const routeName = "/appNameAddPage";
+
   @override
   _AppNameAddPageState createState() => _AppNameAddPageState();
 }
@@ -29,8 +31,8 @@ class _AppNameAddPageState extends State<AppNameAddPage>
 
   @override
   void initState() {
-    _animationController = AnimationController(vsync: this);
     super.initState();
+    _animationController = AnimationController(vsync: this);
   }
  
   @override
@@ -86,15 +88,15 @@ class _AppNameAddPageState extends State<AppNameAddPage>
                 listener: (context, state) {
                   if (state is AppNameErrorState){
                     _showMessage(state.error, error: true);
-                    debugPrint("DebugError: No método _buildPage do AppNameAddPage  -> ${state.error}");
+                    DebugPrint.error("DebugError: No método _buildPage do AppNameAddPage  -> ${state.error}");
                   }
                   if(state is AppNameSuccessState){
                     _showMessage(state.successMessage);
-                    debugPrint("DebugSuccess: No método _buildPage do AppNameAddPage -> ${state.successMessage}");
+                    DebugPrint.print("DebugSuccess: No método _buildPage do AppNameAddPage -> ${state.successMessage}");
                   }
                 },
                 builder: (context, state) {
-                    _appName = context.bloc<AppNameCubit>().appNameModel;
+                    _appName = context.read<AppNameCubit>().appNameModel;
                     return Stack(
                     children : <Widget>[
                       Column(
@@ -158,13 +160,13 @@ class _AppNameAddPageState extends State<AppNameAddPage>
   }
 
   void _post() async {
-    final _appNameCubit = context.bloc<AppNameCubit>();
+    final _appNameCubit = context.read<AppNameCubit>();
     try{
       _appName = AppNameModel();
       _appNameCubit.appNameModel = _appName;
       _appNameCubit.post(_appName);
     }catch (e){
-      debugPrint("DebugError: No método _post do AppNameAddPage -> $e");
+      DebugPrint.error("DebugError: No método _post do AppNameAddPage -> $e");
     }
   }
 

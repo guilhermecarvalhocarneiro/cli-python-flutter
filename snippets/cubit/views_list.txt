@@ -127,7 +127,7 @@ class AppNameListPageState extends State<AppNameListPage>
                     List.generate(state.appNameList.length, (index) {
                       return InkWell(
                       onTap: () {
-                        Navigator.pushNamed(context, AppNameDetailPage.routeName, arguments: state.usuarioList[index]);
+                        Navigator.pushNamed(context, AppNameDetailPage.routeName, arguments: state.appNameList[index]);
                       },
                       child: Card(
                         child: Container(

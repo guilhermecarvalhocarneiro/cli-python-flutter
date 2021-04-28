@@ -17,6 +17,8 @@ import '../cubit.dart';
 import 'update.dart';
 
 class AppNameDetailPage extends StatefulWidget {
+  static const routeName = "/appNameDetailPage";
+
   final AppNameModel appNameModel;
 
   const AppNameDetailPage({Key key, this.appNameModel})
@@ -48,15 +50,14 @@ class _AppNameDetailPageState extends State<AppNameDetailPage>
       listener: (context, state) {
         if (state is AppNameErrorState){
           _showMessage(state.error, error: true);
-          debugPrint("DebugError: No método build do AppNameDetailPage  -> ${state.error}");
+          DebugPrint.error("DebugError: No método build do AppNameDetailPage  -> ${state.error}");
         }
         if(state is AppNameSuccessState){
           _showMessage(state.successMessage);
-          debugPrint("DebugSuccess: No método build do AppNameDetailPage -> ${state.successMessage}");
+          DebugPrint.print("DebugSuccess: No método build do AppNameDetailPage -> ${state.successMessage}");
         }
       },
       builder: (context, state) {
-        _appName = context.bloc<AppNameCubit>().appNameModel;
         return Scaffold(
           key: _scaffoldKey,
           extendBodyBehindAppBar: true,
@@ -67,12 +68,7 @@ class _AppNameDetailPageState extends State<AppNameDetailPage>
               Icons.update,
             ),
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => AppNameUpdatePage(),
-                ),
-              );
+              Navigator.pushNamed(context, AppNameUpdatePage.routeName, arguments: _appNameModel);              
             },
           ),
         );

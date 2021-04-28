@@ -15,6 +15,10 @@ import '../model.dart';
 import '../cubit.dart';
 
 class AppNameUpdatePage extends StatefulWidget {
+  static const routeName = "/appNameUpdate";
+  final AppNameModel appNameModel;
+  const AppNameUpdatePage({Key key, this.appNameModel}) : super(key: key);
+
   @override
   _AppNameAddPageState createState() => _AppNameAddPageState();
 }
@@ -29,8 +33,10 @@ class _AppNameAddPageState extends State<AppNameUpdatePage>
 
   @override
   void initState() {
-    _animationController = AnimationController(vsync: this);
     super.initState();
+    _animationController = AnimationController(vsync: this);
+    _appName = widget.appNameModel;
+    _loadData();
   }
   
   @override
@@ -55,15 +61,14 @@ class _AppNameAddPageState extends State<AppNameUpdatePage>
       listener: (context, state) {
         if (state is AppNameErrorState){
           _showMessage(state.error, error: true);
-          debugPrint("DebugError: No método _buildBody do _buildBody  -> ${state.error}");
+          DebugPrint.error("DebugError: No método _buildBody do _buildBody  -> ${state.error}");
         }
         if(state is AppNameSuccessState){
           _showMessage(state.successMessage);
-          debugPrint("DebugSuccess: No método _buildBody do _buildBody -> ${state.successMessage}");
+          DebugPrint.print("DebugSuccess: No método _buildBody do _buildBody -> ${state.successMessage}");
         }        
       },
       builder: (context, state) {
-        _appName = context.bloc<AppNameCubit>().appNameModel;
         return Stack(
           children: <Widget>[
             HeadWidget(),
@@ -159,13 +164,21 @@ class _AppNameAddPageState extends State<AppNameUpdatePage>
   }
 
   void _put() async {
-    final _appNameCubit = context.bloc<AppNameCubit>();
+    final _appNameCubit = context.read<AppNameCubit>();
     try{
       _appNameCubit.put(_appName);
     }catch (e){
-      debugPrint("DebugError: No método _put do AppNameUpdatePage -> $e");
+      DebugPrint.error("DebugError: No método _put do AppNameUpdatePage -> $e");
     }
   }
+
+    void _loadData() {
+      try {
+        // TODO Popule o formulário de edição com os valores do objeto
+      } catch (e) {
+        DebugPrint.error("DebugError: No método _loadData do AppNameUpdatePage -> $e");
+      }
+    }
 
   /// Método responsável por mostrar um SnackBar com uma mensagem
   /// com o texto passada como parâmetro
