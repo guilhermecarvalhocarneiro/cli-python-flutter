@@ -1,6 +1,6 @@
 /// Arquivo contendo os Widgets componentizados da app AppName
 
 /// [Travar o arquivo]
-/// Caso deseje "travar" o arquivo para não ser parseado novamente
-/// pelo manage do Django adicione um # antes da palavra abaixo
+/// Caso deseje travar o arquivo para não ser parseado novamente
+/// pelo manage do Django remova o # antes da palavra abaixo
 /// FileLocked
